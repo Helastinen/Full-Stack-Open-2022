@@ -3,7 +3,7 @@ import axios from "axios"
 import { CountryFilter, Countries } from "./components/Countries"
 
 const App = () =>  {
-  const [newFilter, setNewFilter] = useState("")
+  const [filter, setFilter] = useState("")
   const [countries, setCountries] = useState([])
   
   useEffect(() => {
@@ -16,18 +16,18 @@ const App = () =>  {
   }, [])
 
   const handleFilter = (e) => {
-    setNewFilter(e.target.value)
+    setFilter(e.target.value)
   }
   
-  const filteredCountries = newFilter
-  ? countries.filter(country => country.name.common.toLowerCase().includes(newFilter.toLowerCase()))
+  const filteredCountries = filter
+  ? countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
   : countries
 
   return (
     <div>
-        <CountryFilter newFilter={newFilter} handleFilter={handleFilter} />
+        <CountryFilter newFilter={filter} handleFilter={handleFilter} />
       <ul>
-        <Countries countries={filteredCountries} />
+        <Countries countries={filteredCountries} handleShowCountry={handleFilter} />
       </ul>
     </div>
   )

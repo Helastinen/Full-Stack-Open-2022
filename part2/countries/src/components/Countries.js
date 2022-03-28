@@ -6,26 +6,23 @@ const CountryFilter = ({ newFilter, handleFilter }) => {
   )
 }
 
-const Countries = ({ countries }) =>  {
+const Countries = ({ countries, handleShowCountry }) =>  {
 
-  const listLanguages = (languages) => {
-    const languagesList = []
-    for (let language in languages) {
-      //console.log("Languages:", languages)
-      languagesList.push(<li key="index">{languages[language]}</li>)
-    }
-    return languagesList
+  const listLanguages = (country) => {
+    // first get languages as array (Object.keys), then map that array into a list of languages
+    const keys = Object.keys(country.languages)
+    return keys.map(key => <li key={key}>{country.languages[key]}</li>)
   }
 
   if (countries.length > 10) {
     return(
-      <div>Too many matches, plase specify.</div>
+      <div>Too many matches, please be more specific.</div>
     )
   } else if (countries.length > 1 && countries.length <= 10) {
     return(
       countries.map(country =>
         <li key={country.name.official}>
-          {country.name.common}
+          {country.name.common} <button value={country.name.common} onClick={handleShowCountry}>show</button>
         </li>
       )
     )
@@ -42,7 +39,7 @@ const Countries = ({ countries }) =>  {
             
             <b>Languages</b>
             <ul>
-              {listLanguages(country.languages)}
+              {listLanguages(country)}
             </ul>
             <p>
               <img src={country.flags.png} alt="Country flag" width="200px"></img>
