@@ -11,13 +11,11 @@ const App = () =>  {
       .get("https://restcountries.com/v3.1/all")
       .then((response) => {
         setCountries(response.data)
-        //console.log(response.data)
+        console.log(response.data)
       })
   }, [])
 
-  const handleFilter = (e) => {
-    setFilter(e.target.value)
-  }
+  const handleFilter = (e) => setFilter(e.target.value)
   
   const filteredCountries = filter
   ? countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
@@ -27,7 +25,7 @@ const App = () =>  {
     <div>
         <CountryFilter newFilter={filter} handleFilter={handleFilter} />
       <ul>
-        <Countries countries={filteredCountries} handleShowCountry={handleFilter} />
+        <Countries countries={filteredCountries} handleShowCountry={handleFilter} filter={filter} />
       </ul>
     </div>
   )
