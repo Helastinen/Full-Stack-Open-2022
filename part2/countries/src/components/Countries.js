@@ -1,3 +1,11 @@
+const CountryFilter = ({ newFilter, handleFilter }) => {
+  return(
+    <>
+    Find countries: <input value={newFilter} onChange={handleFilter}/>
+    </>
+  )
+}
+
 const Countries = ({ countries }) =>  {
 
   const listLanguages = (languages) => {
@@ -46,4 +54,4 @@ const Countries = ({ countries }) =>  {
   }
 }
 
-export default Countries
+export { CountryFilter, Countries }
