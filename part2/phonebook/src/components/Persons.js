@@ -16,11 +16,11 @@ const PersonForm = ({ addPerson, newName, handleNewName, newNumber, handleNewNum
   )
 }
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
   return (
     persons.map(person => 
       <li key={person.id}>
-        {person.name} - {person.number}
+        {person.name} - {person.number} <button onClick={() => handleDelete(person)}>Delete</button>
       </li>
     )
   )
@@ -30,7 +30,6 @@ const FilterPersons = ({ newFilter, handleFilter }) => {
   return(
     <div>
       Filter people by name: <input value={newFilter} onChange={handleFilter} />
-      {/*Debug filter: {newFilter}*/}
     </div>
   ) 
 } 
