@@ -5,6 +5,7 @@ import { CountryFilter, Countries } from "./components/Countries"
 const App = () =>  {
   const [filter, setFilter] = useState("")
   const [countries, setCountries] = useState([])
+  const api_key = process.env.REACT_APP_API_KEY
   
   useEffect(() => {
     axios
@@ -23,10 +24,8 @@ const App = () =>  {
 
   return (
     <div>
-        <CountryFilter newFilter={filter} handleFilter={handleFilter} />
-      <ul>
-        <Countries countries={filteredCountries} handleShowCountry={handleFilter} filter={filter} />
-      </ul>
+        <div><CountryFilter newFilter={filter} handleFilter={handleFilter} /></div>
+        <div><Countries countries={filteredCountries} handleShowCountry={handleFilter} filter={filter} api_key= {api_key} /></div>
     </div>
   )
 }
