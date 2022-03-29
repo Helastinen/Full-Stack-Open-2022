@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { PersonForm, Persons, FilterPersons } from './components/Persons'
 import personsService from "./services/persons"
@@ -39,13 +40,39 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault()
 
+    // if person already exists, ask user to confirm number update
+    const personExists = persons.some(person => person.name === newName)
+    
+    if (personExists) {
+      const result = window.confirm(
+        `\"${newName}\" has already been added to the phonebook, replace the old number with a new one?`
+      )
+
+      //if number update is confirmed, add number to existing person object and render view 
+      if (result) {
+        const personToUpdate = persons.find(person => person.name === newName)
+        const changedPerson = { ...personToUpdate, number: newNumber }
+
+        personsService
+          .update(personToUpdate.id, changedPerson)
+          .then(returnedPerson => 
+            setPersons(persons.map(person => 
+              person.id !== personToUpdate.id
+              ? person
+              : returnedPerson
+            ))
+          )
+      }
+
+      setNewName("")
+      setNewNumber("")
+      return
+    }
+
+    // if person does NOT already exist, add them to persons list
     const personObj = {
       name: newName,
       number: newNumber,
-    }
-
-    if (persons.some(person => person.name === newName)) {
-      return alert(`\"${newName}\" has already been added to the phonebook.`)
     }
 
     personsService
