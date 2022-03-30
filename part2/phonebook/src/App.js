@@ -9,6 +9,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [newFilter, setNewFilter] = useState("")
   const [notification, setNewNotification] = useState("")
+  const [notificationIsError, toggleNotificationIsError] = useState(false)
 
   useEffect(() => {
     personsService
@@ -35,6 +36,12 @@ const App = () => {
       personsService
         .remove(person.id)
         .then(getAll => setPersons(getAll))
+        .catch(error => {
+          setNewNotification(`\"${person.name}\" has already been removed from server.`)
+          setTimeout(() => setNewNotification(""), 3000)
+          toggleNotificationIsError(true)
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
     }
   }
 
@@ -52,17 +59,25 @@ const App = () => {
       //if number update is confirmed, add number to existing person object and render view 
       if (result) {
         const personToUpdate = persons.find(person => person.name === newName)
+        console.log("personToUpdate:", personToUpdate);
         const changedPerson = { ...personToUpdate, number: newNumber }
 
         personsService
           .update(personToUpdate.id, changedPerson)
-          .then(returnedPerson => 
+          .then(returnedPerson => {
+            console.log("returnedPerson:", returnedPerson)
             setPersons(persons.map(person => 
               person.id !== personToUpdate.id
               ? person
               : returnedPerson
             ))
-          )
+          })
+          .catch(error => {
+            setNewNotification(`\"${personToUpdate.name}\" has already been removed from server.`)
+            setTimeout(() => setNewNotification(""), 3000)
+            toggleNotificationIsError(true)
+            setPersons(persons.filter(p => p.id !== personToUpdate.id))
+          })
       }
 
       setNewName("")
@@ -84,15 +99,15 @@ const App = () => {
         setNewNumber("")
 
         setNewNotification(`\"${returnedPerson.name}\" has been added to phonebook.`)
-        setTimeout(() => setNewNotification(""), 3000)
+        setTimeout(() => setNewNotification(""), 5000)
+        toggleNotificationIsError(false)
       })
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification notification={notification} />
-
+      
         <h2>Search</h2>
           <div>
             <FilterPersons 
@@ -111,14 +126,17 @@ const App = () => {
               handleNewNumber={handleNewNumber} 
             />
           </div>
-  
+ 
         <h2>Numbers</h2>
+        <Notification notification={notification} notificationIsError={notificationIsError} />
+
           <ul>
             <Persons 
               persons={filteredPersons}
               handleDelete={handleDelete} 
             />
           </ul>
+        
     </div>
   )
 }
