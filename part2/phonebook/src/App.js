@@ -1,6 +1,6 @@
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { PersonForm, Persons, FilterPersons } from './components/Persons'
+import { useState, useEffect } from "react"
+import { PersonForm, Persons, FilterPersons } from "./components/Persons"
+import Notification from "./components/Notification"
 import personsService from "./services/persons"
 
 const App = () => {
@@ -8,6 +8,7 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [newFilter, setNewFilter] = useState("")
+  const [notification, setNewNotification] = useState("")
 
   useEffect(() => {
     personsService
@@ -81,12 +82,16 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName("")
         setNewNumber("")
+
+        setNewNotification(`\"${returnedPerson.name}\" has been added to phonebook.`)
+        setTimeout(() => setNewNotification(""), 3000)
       })
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification notification={notification} />
 
         <h2>Search</h2>
           <div>

@@ -19,7 +19,7 @@ const PersonForm = ({ addPerson, newName, handleNewName, newNumber, handleNewNum
 const Persons = ({ persons, handleDelete }) => {
   return (
     persons.map(person => 
-      <li key={person.id}>
+      <li key={person.id} className="person">
         {person.name} - {person.number} <button onClick={() => handleDelete(person)}>Delete</button>
       </li>
     )
