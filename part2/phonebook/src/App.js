@@ -1,19 +1,20 @@
-import { useState, useEffect } from 'react'
-import { PersonForm, Persons, FilterPersons } from './components/Persons'
-import axios from "axios"
+import { useState, useEffect } from "react"
+import { PersonForm, Persons, FilterPersons } from "./components/Persons"
+import Notification from "./components/Notification"
+import personsService from "./services/persons"
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [newFilter, setNewFilter] = useState("")
+  const [notification, setNewNotification] = useState("")
+  const [notificationIsError, toggleNotificationIsError] = useState(false)
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        setPersons(response.data)
-      })
+    personsService
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons))
   }, [])
 
   const handleNewName = (e) => setNewName(e.target.value)
@@ -27,47 +28,115 @@ const App = () => {
     setNewFilter(e.target.value)
   }
 
+  const handleDelete = (person) => {    
+    const message = `Delete \"${person.name}\"?`
+    const result = window.confirm(message)
+
+    if (result) {
+      personsService
+        .remove(person.id)
+        .then(getAll => setPersons(getAll))
+        .catch(error => {
+          setNewNotification(`\"${person.name}\" has already been removed from server.`)
+          setTimeout(() => setNewNotification(""), 3000)
+          toggleNotificationIsError(true)
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
+    }
+  }
+
   const addPerson = (e) => {
     e.preventDefault()
 
+    // if person already exists, ask user to confirm number update
+    const personExists = persons.some(person => person.name === newName)
+    
+    if (personExists) {
+      const result = window.confirm(
+        `\"${newName}\" has already been added to the phonebook, replace the old number with a new one?`
+      )
+
+      //if number update is confirmed, add number to existing person object and render view 
+      if (result) {
+        const personToUpdate = persons.find(person => person.name === newName)
+        console.log("personToUpdate:", personToUpdate);
+        const changedPerson = { ...personToUpdate, number: newNumber }
+
+        personsService
+          .update(personToUpdate.id, changedPerson)
+          .then(returnedPerson => {
+            console.log("returnedPerson:", returnedPerson)
+            setPersons(persons.map(person => 
+              person.id !== personToUpdate.id
+              ? person
+              : returnedPerson
+            ))
+          })
+          .catch(error => {
+            setNewNotification(`\"${personToUpdate.name}\" has already been removed from server.`)
+            setTimeout(() => setNewNotification(""), 3000)
+            toggleNotificationIsError(true)
+            setPersons(persons.filter(p => p.id !== personToUpdate.id))
+          })
+      }
+
+      setNewName("")
+      setNewNumber("")
+      return
+    }
+
+    // if person does NOT already exist, add them to persons list
     const personObj = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     }
 
-    if (persons.some(person => person.name === newName)) {
-      return alert(
-        `\"${newName}\" has already been added to the phonebook.`
-      )
-    }
+    personsService
+      .create(personObj)  
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName("")
+        setNewNumber("")
 
-    setPersons(persons.concat(personObj))
-    setNewName("")
-    setNewNumber("")
+        setNewNotification(`\"${returnedPerson.name}\" has been added to phonebook.`)
+        setTimeout(() => setNewNotification(""), 5000)
+        toggleNotificationIsError(false)
+      })
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-
+      
         <h2>Search</h2>
-          <FilterPersons newFilter={newFilter} handleFilter={handleFilter} />
+          <div>
+            <FilterPersons 
+              newFilter={newFilter} 
+              handleFilter={handleFilter} 
+            />
+          </div>
   
         <h2>Add person</h2>
           <div>
             <PersonForm 
-            addPerson={addPerson} 
-            newName= {newName} 
-            handleNewName={handleNewName} 
-            newNumber={newNumber} 
-            handleNewNumber={handleNewNumber} />
+              addPerson={addPerson} 
+              newName= {newName} 
+              handleNewName={handleNewName} 
+              newNumber={newNumber} 
+              handleNewNumber={handleNewNumber} 
+            />
           </div>
-  
+ 
         <h2>Numbers</h2>
+        <Notification notification={notification} notificationIsError={notificationIsError} />
+
           <ul>
-            <Persons persons={filteredPersons} />
+            <Persons 
+              persons={filteredPersons}
+              handleDelete={handleDelete} 
+            />
           </ul>
+        
     </div>
   )
 }
