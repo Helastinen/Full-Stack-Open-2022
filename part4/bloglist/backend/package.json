@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "Full Stack Open 2022 - part 4 - Bloglist",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "inspect": "nodemon --inspect index.js",
+    "test": "jest --verbose"
+  },
+  "author": "Antti Hellsten",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.10"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
