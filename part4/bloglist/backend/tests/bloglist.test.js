@@ -24,7 +24,14 @@ describe("Total likes", () => {
   })
 })
 
-//* Bloglists for testing
+describe("Favorite blog", () => {
+  test("Show favorite blog from list of blog, based on likes", () => {  
+    const result = listHelper.favoriteBlog(listWithMultipleBlogs)
+    expect(result).toEqual(listWithMultipleBlogs[2])
+  })
+})
+
+//* Bloglists for testing, DO NOT EDIT THESE
 const listWithOneBlog = [
   {
     "title": "Test blog",
@@ -88,3 +95,4 @@ const listWithMultipleBlogs = [
 ]
 
 const emptyBlogList = []
+
