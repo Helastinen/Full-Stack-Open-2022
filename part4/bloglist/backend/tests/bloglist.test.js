@@ -31,7 +31,7 @@ describe("Favorite blog", () => {
   })
 })
 
-//* Bloglists for testing, DO NOT EDIT THESE
+//* Test setup: DO NOT EDIT THESE
 const listWithOneBlog = [
   {
     "title": "Test blog",
@@ -95,4 +95,3 @@ const listWithMultipleBlogs = [
 ]
 
 const emptyBlogList = []
-
