@@ -1,3 +1,5 @@
+const { test, expect } = require("@jest/globals")
+const { log } = require("console")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
@@ -38,6 +40,14 @@ test("blogs are returned from bloglist", async () => {
   const response = await api.get("/api/blogs/")
   expect(response.body).toHaveLength(initialBlogs.length)
 }, 100000)
+
+
+test("unique identifier property of blog object is named \"id\"", async () => {
+  const response = await api.get("/api/blogs")
+  const blog = response.body[0]
+
+  expect(blog.id).toBeDefined()
+})
 
 //* Test teardown
 afterAll(() => {
