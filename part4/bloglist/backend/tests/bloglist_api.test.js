@@ -38,10 +38,10 @@ beforeEach(async () => {
 //describe("Creating blogs", () => {
   test("creating a valid blog is succesful", async () => {
     const newBlog = {
-      "title": "Test blog",
-      "author": "Erkki Esimerkkierkki",
-      "url": "https://www.erkki.com",
-      "likes": 65
+      title: "Test blog",
+      author: "Erkki Esimerkkierkki",
+      url: "https://www.erkki.com",
+      likes: 65
     }
 
     await api
@@ -59,9 +59,9 @@ beforeEach(async () => {
 
   test("if likes property is missing from blog that is being created, default value is \"0\"", async () => {
     const newBlog = {
-      "title": "Test blog",
-      "author": "Erkki Esimerkkierkki",
-      "url": "https://www.erkki.com"
+      title: "Test blog",
+      author: "Erkki Esimerkkierkki",
+      url: "https://www.erkki.com"
     }
 
     await api
@@ -78,8 +78,8 @@ beforeEach(async () => {
 
   test("if the title and url properties are missing from blog, backend responds with 400", async () => {
     const newBlog = {
-      "author": "Erkki Esimerkkierkki",
-      "likes": 6
+      author: "Erkki Esimerkkierkki",
+      likes: 6
     }
 
     await api
@@ -103,6 +103,31 @@ beforeEach(async () => {
 
       const titles = blogsAtEnd.map(blog => blog.title)
       expect(titles).not.toContain(blogToDelete.title)
+  })
+//})
+
+//describe("Updating blogs", () => {
+  test("update a single blog", async () => {
+    let blogs = await helper.blogsInDb()
+    const initialBlog = blogs[0]
+
+    const updatedBlog = {
+      title: "Title updated",
+      author: initialBlog.author,
+      url: initialBlog.url,
+      likes: initialBlog.likes + 1
+    }
+
+    await api
+      .put(`/api/blogs/${initialBlog.id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    blogs = await helper.blogsInDb()
+    updatedBlogInDb = blogs[0]
+
+    expect(updatedBlogInDb.likes).toEqual(initialBlog.likes + 1)
+    expect(updatedBlogInDb.title).toContain("Title updated")
   })
 //})
 
