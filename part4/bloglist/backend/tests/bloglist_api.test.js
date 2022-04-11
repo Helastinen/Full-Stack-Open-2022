@@ -1,9 +1,8 @@
-const { expect, test } = require("@jest/globals")
-const expectExport = require("expect")
+const { test, expect } = require("@jest/globals")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const { describe } = require("yargs")
 const app = require("../app")
-const bloglistRouter = require("../controllers/bloglist")
 const Blog = require("../models/blog")
 const helper = require("./test_helper")
 
@@ -20,70 +19,92 @@ beforeEach(async () => {
 })
 
 //* Tests
-test("blogs are returned from bloglist", async () => {
-  const response = await helper.blogsInDb()
-  expect(response).toHaveLength(helper.initialBlogs.length)
-}, 20000)
+//describe("Viewing blogs", () => { 
+//! adding describe gives "YError: Invalid second argument. Expected string but received function." error.
+  test("blogs are returned from bloglist", async () => {
+    const response = await helper.blogsInDb()
+    expect(response).toHaveLength(helper.initialBlogs.length)
+  }, 20000)
+
+  test("unique identifier property of blog object is named \"id\"", async () => {
+    const response = await api.get("/api/blogs")
+    const blog = response.body[0]
+
+    expect(blog.id).toBeDefined()
+  })
+//})
 
 
-test("unique identifier property of blog object is named \"id\"", async () => {
-  const response = await api.get("/api/blogs")
-  const blog = response.body[0]
+//describe("Creating blogs", () => {
+  test("creating a valid blog is succesful", async () => {
+    const newBlog = {
+      "title": "Test blog",
+      "author": "Erkki Esimerkkierkki",
+      "url": "https://www.erkki.com",
+      "likes": 65
+    }
 
-  expect(blog.id).toBeDefined()
-})
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+    
+    const response = await helper.blogsInDb()
+    expect(response).toHaveLength(helper.initialBlogs.length + 1)
 
-test("creating a valid blog is succesful", async () => {
-  const newBlog = {
-    "title": "Test blog",
-    "author": "Erkki Esimerkkierkki",
-    "url": "https://www.erkki.com",
-    "likes": 65
-  }
+    const titles = response.map(blog => blog.title)
+    expect(titles).toContain("Test blog")
+  })
 
-  await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/)
-  
-  const response = await helper.blogsInDb()
-  expect(response).toHaveLength(helper.initialBlogs.length + 1)
+  test("if likes property is missing from blog that is being created, default value is \"0\"", async () => {
+    const newBlog = {
+      "title": "Test blog",
+      "author": "Erkki Esimerkkierkki",
+      "url": "https://www.erkki.com"
+    }
 
-  const titles = response.map(blog => blog.title)
-  expect(titles).toContain("Test blog")
-}, 20000)
+    await api
+      .post("/api/blogs/")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
 
-test("if likes property is missing from blog that is being created, default value is \"0\"", async () => {
-  const newBlog = {
-    "title": "Test blog",
-    "author": "Erkki Esimerkkierkki",
-    "url": "https://www.erkki.com"
-  }
+    const response = await helper.blogsInDb()
+    const newBlogInDb = response[response.length - 1]
 
-  await api
-    .post("/api/blogs/")
-    .send(newBlog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/)
+    expect(newBlogInDb.likes).toEqual(0)
+  })
 
-  const response = await helper.blogsInDb()
-  const newBlogInDb = response[response.length - 1]
+  test("if the title and url properties are missing from blog, backend responds with 400", async () => {
+    const newBlog = {
+      "author": "Erkki Esimerkkierkki",
+      "likes": 6
+    }
 
-  expect(newBlogInDb.likes).toEqual(0)
-})
+    await api
+      .post("/api/blogs/")
+      .send(newBlog)
+      .expect(400)
+  })
+//})
 
-test.only("if the title and url properties are missing from blog, backend responds with 400", async () => {
-  const newBlog = {
-    "author": "Erkki Esimerkkierkki",
-    "likes": 6
-  }
+//describe("Deleting blogs", () => {
+  test("delete a single blog", async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+    
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
 
-  await api
-    .post("/api/blogs/")
-    .send(newBlog)
-    .expect(400)
-})
+      const blogsAtEnd = await helper.blogsInDb()
+      expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+
+      const titles = blogsAtEnd.map(blog => blog.title)
+      expect(titles).not.toContain(blogToDelete.title)
+  })
+//})
 
 //* Test teardown
 afterAll(() => {
