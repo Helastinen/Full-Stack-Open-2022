@@ -8,8 +8,15 @@ bloglistRouter.get("/", async (request, response) => {
 
 bloglistRouter.post("/", async (request, response) => {
   const newBlog = new Blog(request.body)
-  if (!newBlog.likes) newBlog.likes = 0
   
+  if ( !newBlog.title && !newBlog.url ) {
+    response
+      .status(400)
+      .end()
+    return
+  }
+  if ( !newBlog.likes ) newBlog.likes = 0
+
   const newBlogAdded = await newBlog.save()
 
   response

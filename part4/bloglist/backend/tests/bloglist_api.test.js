@@ -1,4 +1,5 @@
 const { expect, test } = require("@jest/globals")
+const expectExport = require("expect")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
@@ -53,12 +54,11 @@ test("creating a valid blog is succesful", async () => {
   expect(titles).toContain("Test blog")
 }, 20000)
 
-test("likes property default value is \"0\" if, property is missing from blog object", async () => {
+test("if likes property is missing from blog that is being created, default value is \"0\"", async () => {
   const newBlog = {
     "title": "Test blog",
     "author": "Erkki Esimerkkierkki",
-    "url": "https://www.erkki.com",
-    "likes": 65
+    "url": "https://www.erkki.com"
   }
 
   await api
@@ -71,6 +71,18 @@ test("likes property default value is \"0\" if, property is missing from blog ob
   const newBlogInDb = response[response.length - 1]
 
   expect(newBlogInDb.likes).toEqual(0)
+})
+
+test.only("if the title and url properties are missing from blog, backend responds with 400", async () => {
+  const newBlog = {
+    "author": "Erkki Esimerkkierkki",
+    "likes": 6
+  }
+
+  await api
+    .post("/api/blogs/")
+    .send(newBlog)
+    .expect(400)
 })
 
 //* Test teardown
