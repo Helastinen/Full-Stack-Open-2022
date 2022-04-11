@@ -57,7 +57,8 @@ test("likes property default value is \"0\" if, property is missing from blog ob
   const newBlog = {
     "title": "Test blog",
     "author": "Erkki Esimerkkierkki",
-    "url": "https://www.erkki.com"
+    "url": "https://www.erkki.com",
+    "likes": 65
   }
 
   await api
