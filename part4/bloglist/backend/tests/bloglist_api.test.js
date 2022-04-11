@@ -1,7 +1,5 @@
-const { test, expect } = require("@jest/globals")
 const mongoose = require("mongoose")
 const supertest = require("supertest")
-const { describe } = require("yargs")
 const app = require("../app")
 const Blog = require("../models/blog")
 const helper = require("./test_helper")
@@ -27,8 +25,8 @@ beforeEach(async () => {
   }, 20000)
 
   test("unique identifier property of blog object is named \"id\"", async () => {
-    const response = await api.get("/api/blogs")
-    const blog = response.body[0]
+    const response = await helper.blogsInDb()
+    const blog = response[0]
 
     expect(blog.id).toBeDefined()
   })
@@ -64,16 +62,13 @@ beforeEach(async () => {
       url: "https://www.erkki.com"
     }
 
-    await api
+    const newBlogInDb = await api
       .post("/api/blogs/")
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
-    const response = await helper.blogsInDb()
-    const newBlogInDb = response[response.length - 1]
-
-    expect(newBlogInDb.likes).toEqual(0)
+    expect(newBlogInDb.body.likes).toEqual(0)
   })
 
   test("if the title and url properties are missing from blog, backend responds with 400", async () => {
@@ -118,16 +113,14 @@ beforeEach(async () => {
       likes: initialBlog.likes + 1
     }
 
-    await api
+    const updatedBlogInDb = await api
       .put(`/api/blogs/${initialBlog.id}`)
       .send(updatedBlog)
       .expect(200)
+      .expect("Content-Type", /application\/json/)
 
-    blogs = await helper.blogsInDb()
-    updatedBlogInDb = blogs[0]
-
-    expect(updatedBlogInDb.likes).toEqual(initialBlog.likes + 1)
-    expect(updatedBlogInDb.title).toContain("Title updated")
+    expect(updatedBlogInDb.body.likes).toEqual(initialBlog.likes + 1)
+    expect(updatedBlogInDb.body.title).toContain("Title updated")
   })
 //})
 

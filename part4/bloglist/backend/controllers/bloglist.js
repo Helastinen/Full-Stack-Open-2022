@@ -17,11 +17,11 @@ bloglistRouter.post("/", async (request, response) => {
   }
   if ( !newBlog.likes ) newBlog.likes = 0
 
-  const newBlogAdded = await newBlog.save()
+  const newBlogInDb = await newBlog.save()
 
   response
     .status(201)
-    .json(newBlogAdded)
+    .json(newBlogInDb)
 })
 
 bloglistRouter.delete("/:id", async (request, response) => {
