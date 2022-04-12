@@ -7,7 +7,14 @@ bloglistRouter.get("/", async (request, response) => {
 })
 
 bloglistRouter.post("/", async (request, response) => {
-  const newBlog = new Blog(request.body)
+  const body = request.body
+
+  const newBlog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  })
   
   if ( !newBlog.title && !newBlog.url ) {
     response
