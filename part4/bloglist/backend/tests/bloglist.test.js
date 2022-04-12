@@ -25,7 +25,7 @@ describe("Total likes", () => {
 })
 
 describe("Favorite blog", () => {
-  test("Show favorite blog from list of blog, based on likes", () => {  
+  test("Show favorite (= most likes) blog from bloglist", () => {  
     const result = listHelper.favoriteBlog(listWithMultipleBlogs)
     expect(result).toEqual(listWithMultipleBlogs[2])
   })

@@ -2,7 +2,10 @@ const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
 const Blog = require("../models/blog")
+const User = require("../models/user")
 const helper = require("./test_helper")
+const bcrypt = require("bcrypt")
+const { application } = require("express")
 
 const api = supertest(app)
 
@@ -17,8 +20,7 @@ beforeEach(async () => {
 })
 
 //* Tests
-//describe("Viewing blogs", () => { 
-//! adding describe gives "YError: Invalid second argument. Expected string but received function." error.
+describe("Viewing blogs", () => { 
   test("blogs are returned from bloglist", async () => {
     const response = await helper.blogsInDb()
     expect(response).toHaveLength(helper.initialBlogs.length)
@@ -30,10 +32,10 @@ beforeEach(async () => {
 
     expect(blog.id).toBeDefined()
   })
-//})
+})
 
 
-//describe("Creating blogs", () => {
+describe("Creating blogs", () => {
   test("creating a valid blog is successful", async () => {
     const newBlog = {
       title: "Test blog",
@@ -82,9 +84,9 @@ beforeEach(async () => {
       .send(newBlog)
       .expect(400)
   })
-//})
+})
 
-//describe("Deleting blogs", () => {
+describe("Deleting blogs", () => {
   test("delete a single blog", async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
@@ -99,9 +101,9 @@ beforeEach(async () => {
     const titles = blogsAtEnd.map(blog => blog.title)
     expect(titles).not.toContain(blogToDelete.title)
   })
-//})
+})
 
-//describe("Updating blogs", () => {
+describe("Updating blogs", () => {
   test("update a single blog", async () => {
     let blogs = await helper.blogsInDb()
     const initialBlog = blogs[0]
@@ -122,7 +124,65 @@ beforeEach(async () => {
     expect(updatedBlogInDb.body.likes).toEqual(initialBlog.likes + 1)
     expect(updatedBlogInDb.body.title).toContain("Title updated")
   })
-//})
+})
+
+describe("When there is initially one user in db", () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash("sekret", 10)
+    const user = new User({ 
+      username: "antti",
+      name: "Super User Antti",
+      passwordHash
+    })
+
+    await user.save()
+  })
+
+  test("creation succeeds with a new username", async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: "penttinen",
+      name: "Pentti",
+      password: "salainen" 
+    }
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(user => user.username)
+    expect(usernames).toContain(newUser.username)
+  })
+
+  test("creation fails with proper statuscode and message if username already taken", async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: "antti",
+      name: "Super User Antti",
+      password: "sekret",
+    }
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("username must be unique")
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
+})
 
 //* Test teardown
 afterAll(() => {
