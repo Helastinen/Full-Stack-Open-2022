@@ -126,7 +126,7 @@ describe("Updating blogs", () => {
   })
 })
 
-describe("When there is initially one user in db", () => {
+describe("Creating users (initially one user in db)", () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -178,6 +178,47 @@ describe("When there is initially one user in db", () => {
       .expect("Content-Type", /application\/json/)
 
     expect(result.body.error).toContain("username must be unique")
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
+
+  test("creation fails with proper statuscode and message if username or password is missing", async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      name: "Super User Antti",
+      password: "sekret",
+    }
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("username or password missing")
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
+
+  test("creation fails with proper statuscode and message if username or password are under three chars long", async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: "12",
+      name: "Super User Antti",
+      password: "12",
+    }
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.error).toContain("username and password must be at least 3 chars long")
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
