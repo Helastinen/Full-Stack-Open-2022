@@ -34,7 +34,7 @@ beforeEach(async () => {
 
 
 //describe("Creating blogs", () => {
-  test("creating a valid blog is succesful", async () => {
+  test("creating a valid blog is successful", async () => {
     const newBlog = {
       title: "Test blog",
       author: "Erkki Esimerkkierkki",
@@ -93,11 +93,11 @@ beforeEach(async () => {
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
 
-      const blogsAtEnd = await helper.blogsInDb()
-      expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
 
-      const titles = blogsAtEnd.map(blog => blog.title)
-      expect(titles).not.toContain(blogToDelete.title)
+    const titles = blogsAtEnd.map(blog => blog.title)
+    expect(titles).not.toContain(blogToDelete.title)
   })
 //})
 
