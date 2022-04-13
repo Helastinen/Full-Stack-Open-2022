@@ -7,7 +7,8 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "inspect": "nodemon --inspect index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
+    "lint": "eslint ."
   },
   "author": "Antti Hellsten",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "mongoose": "^6.2.10"
   },
   "devDependencies": {
+    "eslint": "^8.13.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"

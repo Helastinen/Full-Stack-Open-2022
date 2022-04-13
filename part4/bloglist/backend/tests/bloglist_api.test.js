@@ -5,7 +5,6 @@ const Blog = require("../models/blog")
 const User = require("../models/user")
 const helper = require("./test_helper")
 const bcrypt = require("bcrypt")
-const { application } = require("express")
 
 const api = supertest(app)
 
@@ -20,7 +19,7 @@ beforeEach(async () => {
 })
 
 //* Tests
-describe("Viewing blogs", () => { 
+describe("Viewing blogs", () => {
   test("blogs are returned from bloglist", async () => {
     const response = await helper.blogsInDb()
     expect(response).toHaveLength(helper.initialBlogs.length)
@@ -49,7 +48,7 @@ describe("Creating blogs", () => {
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/)
-    
+
     const response = await helper.blogsInDb()
     expect(response).toHaveLength(helper.initialBlogs.length + 1)
 
@@ -90,7 +89,7 @@ describe("Deleting blogs", () => {
   test("delete a single blog", async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
-    
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
@@ -131,7 +130,7 @@ describe("Creating users (initially one user in db)", () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash("sekret", 10)
-    const user = new User({ 
+    const user = new User({
       username: "antti",
       name: "Super User Antti",
       passwordHash
@@ -146,7 +145,7 @@ describe("Creating users (initially one user in db)", () => {
     const newUser = {
       username: "penttinen",
       name: "Pentti",
-      password: "salainen" 
+      password: "salainen"
     }
 
     await api

@@ -3,29 +3,29 @@ const listHelper = require("../utils/list_helper")
 test("dummy returns one", () => {
   const blogs =[]
   const result = listHelper.dummy(blogs)
-  
+
   expect(result).toBe(1)
 })
 
 describe("Total likes", () => {
-  test("Total likes of bloglist that has one blog", () => {  
+  test("Total likes of bloglist that has one blog", () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     expect(result).toBe(673)
   })
 
-  test("Total likes of bloglist that has multiple blogs", () => {  
+  test("Total likes of bloglist that has multiple blogs", () => {
     const result = listHelper.totalLikes(listWithMultipleBlogs)
     expect(result).toBe(36)
   })
-  
-  test("Total likes of bloglist that has no blogs", () => {  
+
+  test("Total likes of bloglist that has no blogs", () => {
     const result = listHelper.totalLikes(emptyBlogList)
     expect(result).toBe(0)
   })
 })
 
 describe("Favorite blog", () => {
-  test("Show favorite (= most likes) blog from bloglist", () => {  
+  test("Show favorite (= most likes) blog from bloglist", () => {
     const result = listHelper.favoriteBlog(listWithMultipleBlogs)
     expect(result).toEqual(listWithMultipleBlogs[2])
   })
@@ -91,7 +91,7 @@ const listWithMultipleBlogs = [
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
     __v: 0
-  }  
+  }
 ]
 
 const emptyBlogList = []
