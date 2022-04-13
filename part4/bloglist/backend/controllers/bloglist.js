@@ -50,7 +50,14 @@ bloglistRouter.post("/", async (request, response) => {
 
 bloglistRouter.delete("/:id", async (request, response) => {
   const id = request.params.id
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  const blog = await Blog.findById(id)
 
+  if ( !(blog.user.toString() === decodedToken.id) ) {
+    return response
+      .status(401)
+      .json({ error: "User is not creator of blog or token missing" })
+  }
   await Blog.findByIdAndRemove(id)
   response
     .status(204)
