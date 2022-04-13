@@ -8,6 +8,7 @@ const mongoose = require("mongoose")
 //* import middleware
 const logger = require("./utils/logger")
 const config = require("./utils/config")
+const middleware = require("./utils/middleware")
 
 //* import routers
 const bloglistRouter = require("./controllers/bloglist")
@@ -21,6 +22,7 @@ mongoose.connect(mongoUrl)
 //* Hook up to app
 app.use(cors())
 app.use(express.json())
+app.use(middleware.tokenExtractor)
 
 // hook up to router with default URL
 app.use("/api/blogs", bloglistRouter)
