@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(middleware.tokenExtractor)
 
 // hook up to router with default URL
-app.use("/api/blogs", bloglistRouter)
+app.use("/api/blogs", middleware.userExtractor, bloglistRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
 

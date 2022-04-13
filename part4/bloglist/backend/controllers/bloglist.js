@@ -1,8 +1,6 @@
 /* eslint-disable no-undef */
 const bloglistRouter = require("express").Router()
 const Blog = require("../models/blog")
-const User = require("../models/user")
-const jwt = require("jsonwebtoken")
 
 bloglistRouter.get("/", async (request, response) => {
   const blogs = await Blog
@@ -13,15 +11,7 @@ bloglistRouter.get("/", async (request, response) => {
 
 bloglistRouter.post("/", async (request, response) => {
   const body = request.body
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-  if (!decodedToken.id) {
-    return response
-      .status(401)
-      .json({ error: "invalid or missing token" })
-  }
-
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
 
   const newBlog = new Blog({
     title: body.title,
@@ -37,6 +27,7 @@ bloglistRouter.post("/", async (request, response) => {
       .end()
     return
   }
+
   if ( !newBlog.likes ) newBlog.likes = 0
 
   const savedBlog = await newBlog.save()
@@ -50,14 +41,16 @@ bloglistRouter.post("/", async (request, response) => {
 
 bloglistRouter.delete("/:id", async (request, response) => {
   const id = request.params.id
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
   const blog = await Blog.findById(id)
 
-  if ( !(blog.user.toString() === decodedToken.id) ) {
+  const user = request.user
+
+  if ( !(blog.user.toString() === user.id) ) {
     return response
       .status(401)
       .json({ error: "User is not creator of blog or token missing" })
   }
+
   await Blog.findByIdAndRemove(id)
   response
     .status(204)
