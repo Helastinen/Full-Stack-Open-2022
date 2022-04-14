@@ -6,7 +6,7 @@ const cors = require("cors")
 const mongoose = require("mongoose")
 
 //* import middleware
-const logger = require("./utils/logger")
+//const logger = require("./utils/logger")
 const config = require("./utils/config")
 const middleware = require("./utils/middleware")
 
@@ -24,9 +24,11 @@ app.use(cors())
 app.use(express.json())
 app.use(middleware.tokenExtractor)
 
-// hook up to router with default URL
+//* hook up to router with default URL
 app.use("/api/blogs", middleware.userExtractor, bloglistRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
+
+app.use(middleware.errorHandler)
 
 module.exports = app

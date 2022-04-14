@@ -11,13 +11,38 @@ const api = supertest(app)
 
 //* Test setup
 beforeEach(async () => {
+  // initialize blogs
   await Blog.deleteMany({})
 
   const blogObjects = helper.initialBlogs
     .map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
+
+  // initialize users
+  await User.deleteMany({})
+
+  const user = new User(helper.initialUsers[0])
+  const passwordHash = await bcrypt.hash("sekret", 10)
+  user.passwordHash = passwordHash
+
+  await user.save()
 })
+
+const createToken = async () => {
+  // login with user to create the token.
+  const loginCredentials = {
+    username: "antti",
+    password: "sekret"
+  }
+
+  const loggedInUser = await api
+    .post("/api/login")
+    .send(loginCredentials)
+    .expect(200)
+
+  return loggedInUser.body.token
+}
 
 //* Tests
 describe("Viewing blogs", () => {
@@ -44,9 +69,12 @@ describe("Creating blogs", () => {
       likes: 65
     }
 
+    const token = await createToken()
+
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set("authorization", `bearer ${token}`)
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
@@ -57,6 +85,27 @@ describe("Creating blogs", () => {
     expect(titles).toContain("Test blog")
   })
 
+  test("if token is not provided in blog creation, backend responds with 400", async () => {
+    const newBlog = {
+      title: "Test blog",
+      author: "Erkki Esimerkkierkki",
+      url: "https://www.erkki.com",
+      likes: 65
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(401)
+      .expect("Content-Type", /application\/json/)
+
+    const response = await helper.blogsInDb()
+    expect(response).toHaveLength(helper.initialBlogs.length)
+
+    const titles = response.map(blog => blog.title)
+    expect(titles).not.toContain("Test blog")
+  })
+
   test("if likes property is missing from blog that is being created, default value is \"0\"", async () => {
     const newBlog = {
       title: "Test blog",
@@ -64,9 +113,12 @@ describe("Creating blogs", () => {
       url: "https://www.erkki.com"
     }
 
+    const token = await createToken()
+
     const newBlogInDb = await api
       .post("/api/blogs/")
       .send(newBlog)
+      .set("authorization", `bearer ${token}`)
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
@@ -79,9 +131,12 @@ describe("Creating blogs", () => {
       likes: 6
     }
 
+    const token = await createToken()
+
     await api
       .post("/api/blogs/")
       .send(newBlog)
+      .set("authorization", `bearer ${token}`)
       .expect(400)
   })
 })
@@ -90,9 +145,11 @@ describe("Deleting blogs", () => {
   test("delete a single blog", async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
+    const token = await createToken()
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set("authorization", `bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -107,6 +164,7 @@ describe("Updating blogs", () => {
   test("update a single blog", async () => {
     let blogs = await helper.blogsInDb()
     const initialBlog = blogs[0]
+    const token = await createToken()
 
     const updatedBlog = {
       title: "Title updated",
@@ -118,6 +176,7 @@ describe("Updating blogs", () => {
     const updatedBlogInDb = await api
       .put(`/api/blogs/${initialBlog.id}`)
       .send(updatedBlog)
+      .set("authorization", `bearer ${token}`)
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
@@ -127,19 +186,6 @@ describe("Updating blogs", () => {
 })
 
 describe("Creating users (initially one user in db)", () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash("sekret", 10)
-    const user = new User({
-      username: "antti",
-      name: "Super User Antti",
-      passwordHash
-    })
-
-    await user.save()
-  })
-
   test("creation succeeds with a new username", async () => {
     const usersAtStart = await helper.usersInDb()
 
@@ -167,7 +213,7 @@ describe("Creating users (initially one user in db)", () => {
 
     const newUser = {
       username: "antti",
-      name: "Super User Antti",
+      name: "New User Antti",
       password: "sekret",
     }
 
