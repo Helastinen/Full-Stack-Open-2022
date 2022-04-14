@@ -1,4 +1,4 @@
-const dummy = (blogs) => {
+const dummy = () => {
   return 1
 }
 
@@ -10,11 +10,11 @@ const totalLikes = (blogs) => {
 }
 
 const favoriteBlog = (blogs) => {
-  return blogs.reduce((prevBlog, currentBlog) => 
-      prevBlog.likes > currentBlog.likes
-        ? prevBlog
-        : currentBlog,
-    0
+  return blogs.reduce((prevBlog, currentBlog) =>
+    prevBlog.likes > currentBlog.likes
+      ? prevBlog
+      : currentBlog,
+  0
   )
 }
 
