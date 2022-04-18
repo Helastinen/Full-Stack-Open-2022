@@ -31,6 +31,14 @@ describe("Favorite blog", () => {
   })
 })
 
+//! Tehtävä 4.6. kesken
+describe("Most blog", () => {
+  test.only("Show author who has the most blogs in the bloglist", () => {
+    const result = listHelper.mostBlogs(listWithMultipleBlogs)
+    expect(result).toEqual({ author: "Robert C. Martin", blogs: 3 })
+  })
+})
+
 //* Test setup: DO NOT EDIT THESE
 const listWithOneBlog = [
   {
