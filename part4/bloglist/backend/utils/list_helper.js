@@ -22,7 +22,7 @@ const mostBlogs = (bloglist) => {
   // list of authors
   const authorlist = bloglist.map(blog => blog.author)
 
-  // object with authors and blogCount
+  // object with authors and blogCount: {author1: 1, author2: 3, author3: 5...}
   let countedAuthors = authorlist.reduce((allAuthors, author) => {
     if (author in allAuthors) {
       allAuthors[author]++
@@ -32,7 +32,6 @@ const mostBlogs = (bloglist) => {
 
     return allAuthors
   }, {})
-  console.log("countedAuthors:", countedAuthors) // {author1: 1, author2: 3, author3: 5...}
 
   // blogCount
   const values = Object.values(countedAuthors)
