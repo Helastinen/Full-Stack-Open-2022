@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/blogs'
+/* eslint-disable no-useless-escape */
+import { useState, useEffect } from "react"
+
+import Blog from "./components/Blog"
+import Notification from "./components/Notification"
+
+import blogService from "./services/blogs"
 import loginService from "./services/login"
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +18,7 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const [author, setAuthor] = useState("")
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -32,10 +38,15 @@ const App = () => {
     console.log(window.localStorage)
   }, [])
 
+  const notify = (note, type = "info") => {
+    setNotification({ note, type })
+    setTimeout(() => setNotification(null),
+    4000)
+  }
+
   //* Event handlers: login/logout
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log("login attempt with: ", username, password)
 
     try {
       const user = await loginService.login(username, password)
@@ -48,8 +59,8 @@ const App = () => {
       setPassword("")
       console.log(window.localStorage);
     } 
-    catch (expection) {
-      console.log("Login failed:", expection)
+    catch (exception) {
+      notify("Login failed, wrong password or username", "error")
     }
   }
 
@@ -65,7 +76,7 @@ const App = () => {
       console.log("LocalStorage after succesful logout:", window.localStorage)
     }
     catch (exception) {
-      console.log("Logout failed:", exception)
+      notify("Logout failed", "error")
     }
   }
 
@@ -89,10 +100,11 @@ const App = () => {
       setAuthor("")
       blogService.getAll().then(blogs => setBlogs(blogs))
 
-      console.log("Added blog succesfully:", addedBlog)
+      console.log("Submitting blog succesfully", addedBlog)
+      notify(`\"${addedBlog.title}\" by ${addedBlog.author} added succesfully`)
     }
     catch (exception) {
-      console.log("Adding blog failed:", exception)
+      notify("Submitting blog failed: Check that blog has title and url", "error")
     } 
   }
 
@@ -103,7 +115,7 @@ const App = () => {
   //* html templates as functions (to be injected to return)
   const loginForm = () => (
     <form onSubmit={handleLogin}>
-        <div>Username:{' '}
+        <div>Username:{" "}
           <input 
             type="text"
             value={username}
@@ -112,7 +124,7 @@ const App = () => {
           />
         </div>
         <div>
-          Password: {' '}
+          Password: {" "}
           <input 
             type="password"
             value={password}
@@ -129,14 +141,14 @@ const App = () => {
   const bloglist = () => (
     <div>
       <p>
-        <i>{user.name}</i> logged in.{' '} 
+        <i>{user.name}</i> logged in.{" "} 
         <button type="submit" onClick={handleLogout}>Logout</button>
       </p>
       
-      <h4>Create new blog</h4>
+      <h3>Submit a new blog</h3>
       <form onSubmit={handleAddBlog}>
         <div>
-          Title:{' '}
+          Title:{" "}
           <input 
             type="text"
             value={title}
@@ -146,7 +158,7 @@ const App = () => {
         </div>
         
         <div>
-          URL:{' '}
+          URL:{" "}
           <input 
             type="text"
             value={url}
@@ -156,7 +168,7 @@ const App = () => {
         </div>
 
         <div>
-          Author:{' '}
+          Author:{" "}
           <input 
             type="text"
             value={author}
@@ -170,11 +182,16 @@ const App = () => {
         </div>
       </form>
 
-      <h4>List of blogs</h4>
+      <h3>List of blogs</h3>
       <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <ul>
+          <lh><b>Name</b></lh>
+          {" "}-{" "}
+          <lh><b>Author</b></lh>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+        </ul>
       </div>
     </div>
   )
@@ -182,6 +199,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification notification={notification} />
       {user === null 
         ? loginForm()
         : bloglist()
