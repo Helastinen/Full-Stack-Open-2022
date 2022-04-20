@@ -1,8 +1,10 @@
 /* eslint-disable no-useless-escape */
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 import Blog from "./components/Blog"
+import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -10,15 +12,11 @@ import loginService from "./services/login"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [notification, setNotification] = useState(null)
   
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  
-  const [title, setTitle] = useState("")
-  const [url, setUrl] = useState("")
-  const [author, setAuthor] = useState("")
-  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -44,7 +42,7 @@ const App = () => {
     4000)
   }
 
-  //* Event handlers: login/logout
+  //* Event handlers: login
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -70,9 +68,6 @@ const App = () => {
     try {
       window.localStorage.removeItem("localBloglistUser")
       setUser(null)
-      setTitle("")
-      setUrl("")
-      setAuthor("")
       console.log("LocalStorage after succesful logout:", window.localStorage)
     }
     catch (exception) {
@@ -84,21 +79,13 @@ const App = () => {
   const handlePassword = (event) => setPassword(event.target.value)
 
   //* Event handlers: adding blogs
-  const handleAddBlog = async (event) => {
-    event.preventDefault()
+  const submitBlogRef = useRef()
 
+  const submitBlog = async (blogObj) => {
     try {
-      const blogObj = {
-        title: title,
-        url: url,
-        author: author,
-      }
-
       const addedBlog = await blogService.addBlog(blogObj)
-      setTitle("")
-      setUrl("")
-      setAuthor("")
       blogService.getAll().then(blogs => setBlogs(blogs))
+      submitBlogRef.current.toggleVisibility()
 
       console.log("Submitting blog succesfully", addedBlog)
       notify(`\"${addedBlog.title}\" by ${addedBlog.author} added succesfully`)
@@ -108,11 +95,7 @@ const App = () => {
     } 
   }
 
-  const handleTitle = (event) => setTitle(event.target.value)
-  const handleUrl = (event) => setUrl(event.target.value)
-  const handleAuthor = (event) => setAuthor(event.target.value)
-
-  //* html templates as functions (to be injected to return)
+  //* Templates (JSX)
   const loginForm = () => (
     <form onSubmit={handleLogin}>
         <div>Username:{" "}
@@ -123,6 +106,7 @@ const App = () => {
             onChange={handleUsername} 
           />
         </div>
+
         <div>
           Password: {" "}
           <input 
@@ -132,11 +116,16 @@ const App = () => {
             onChange={handlePassword} 
           />
         </div>
+
         <div>
           <button type="submit">Login</button>
         </div>
       </form>
   )
+  
+  const noBullet = {
+    listStyle: "none",
+  }
 
   const bloglist = () => (
     <div>
@@ -144,50 +133,15 @@ const App = () => {
         <i>{user.name}</i> logged in.{" "} 
         <button type="submit" onClick={handleLogout}>Logout</button>
       </p>
-      
-      <h3>Submit a new blog</h3>
-      <form onSubmit={handleAddBlog}>
-        <div>
-          Title:{" "}
-          <input 
-            type="text"
-            value={title}
-            name="Title"
-            onChange={handleTitle}
-          />
-        </div>
-        
-        <div>
-          URL:{" "}
-          <input 
-            type="text"
-            value={url}
-            name="URL"
-            onChange={handleUrl}
-          />
-        </div>
 
-        <div>
-          Author:{" "}
-          <input 
-            type="text"
-            value={author}
-            name="Author"
-            onChange={handleAuthor}
-          />
-        </div>
-
-        <div>
-          <button type="submit">Submit blog</button>
-        </div>
-      </form>
+      <Togglable buttonLabel="New note" ref={submitBlogRef}>
+        <SubmitBlog submitBlog={submitBlog} /> 
+      </Togglable>    
 
       <h3>List of blogs</h3>
       <div>
         <ul>
-          <lh><b>Name</b></lh>
-          {" "}-{" "}
-          <lh><b>Author</b></lh>
+          <li style={noBullet}><b>Name</b> by <b>Author</b></li>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
@@ -199,11 +153,10 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+
       <Notification notification={notification} />
-      {user === null 
-        ? loginForm()
-        : bloglist()
-      }
+
+      { user === null ? loginForm() : bloglist() }
     </div>
   )
 }
