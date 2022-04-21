@@ -48,6 +48,7 @@ router.delete("/:id", async (request, response) => {
 
 router.put("/:id", async (request, response) => {
   const blog = request.body
+  console.log("BE request body:", request.body)
 
   const updatedBlog = await Blog
     .findByIdAndUpdate(

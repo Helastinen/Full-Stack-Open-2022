@@ -95,6 +95,18 @@ const App = () => {
     } 
   }
 
+  //* Event handlers: add like to blog
+  const addLike = async (blogObj, blogId) => {
+    try {
+      const changedBlog = await blogService.addLike(blogObj, blogId)
+      blogService.getAll().then(blogs => setBlogs(blogs))
+      notify(`Added like to \"${changedBlog.title}\" succesfully`)
+    }
+    catch (exception) {
+      notify("Adding a like failed", "error")
+    }
+  }
+
   //* Templates (JSX)
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -137,11 +149,11 @@ const App = () => {
               <button type="submit" onClick={handleLogout}>Logout</button>
             </p>
       
-            <Togglable buttonLabel="New note" ref={submitBlogRef}>
+            <Togglable buttonLabel="New blog" ref={submitBlogRef}>
               <SubmitBlog submitBlog={submitBlog} /> 
             </Togglable>
             
-            <BlogList blogs={blogs} />
+            <BlogList blogs={blogs} addLike={addLike} />
           </div>
        }
     </div>
