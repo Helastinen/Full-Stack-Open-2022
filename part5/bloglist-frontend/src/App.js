@@ -134,7 +134,7 @@ const App = () => {
         </div>
       </form>
   )
-  
+
   return (
     <div>
       <h2>Blogs</h2>

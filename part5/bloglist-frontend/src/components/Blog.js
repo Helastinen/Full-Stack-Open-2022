@@ -27,8 +27,6 @@ const Blog = ({ blog, addLike }) => {
     }
     const blogId = blog.id
 
-    console.log("add like to blogObj:",blogObj)
-
     addLike(blogObj, blogId)
   }
 
