@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import { useState, useEffect, useRef } from "react"
 
-import Blog from "./components/Blog"
+import BlogList from "./components/BlogList"
 import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
@@ -123,40 +123,27 @@ const App = () => {
       </form>
   )
   
-  const noBullet = {
-    listStyle: "none",
-  }
-
-  const bloglist = () => (
-    <div>
-      <p>
-        <i>{user.name}</i> logged in.{" "} 
-        <button type="submit" onClick={handleLogout}>Logout</button>
-      </p>
-
-      <Togglable buttonLabel="New note" ref={submitBlogRef}>
-        <SubmitBlog submitBlog={submitBlog} /> 
-      </Togglable>    
-
-      <h3>List of blogs</h3>
-      <div>
-        <ul>
-          <li style={noBullet}><b>Name</b> by <b>Author</b></li>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
-        </ul>
-      </div>
-    </div>
-  )
-
   return (
     <div>
       <h2>Blogs</h2>
 
       <Notification notification={notification} />
 
-      { user === null ? loginForm() : bloglist() }
+      { user === null 
+        ? loginForm() 
+        : <div>
+            <p>
+              <i>{user.name}</i> logged in.{" "} 
+              <button type="submit" onClick={handleLogout}>Logout</button>
+            </p>
+      
+            <Togglable buttonLabel="New note" ref={submitBlogRef}>
+              <SubmitBlog submitBlog={submitBlog} /> 
+            </Togglable>
+            
+            <BlogList blogs={blogs} />
+          </div>
+       }
     </div>
   )
 }
