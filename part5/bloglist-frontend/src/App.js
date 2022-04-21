@@ -9,7 +9,6 @@ import Togglable from "./components/Togglable"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
-
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState(null)
@@ -172,7 +171,7 @@ const App = () => {
               <SubmitBlog submitBlog={submitBlog} /> 
             </Togglable>
             
-            <BlogList blogs={blogs} addLike={addLike} deleteBlog={deleteBlog} />
+            <BlogList blogs={blogs} addLike={addLike} deleteBlog={deleteBlog} user={user} />
           </div>
        }
     </div>
