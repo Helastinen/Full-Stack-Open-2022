@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { useState } from "react"
 
 const blogStyle = {
@@ -9,7 +10,7 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog, addLike }) => {
+const Blog = ({ blog, addLike, deleteBlog }) => {
   const [showBlogDetails, setShowBlogDetails] = useState(false)
   
   const hideWhenDetailsVisible = { display: showBlogDetails ? "none" : "" }
@@ -30,6 +31,15 @@ const Blog = ({ blog, addLike }) => {
     addLike(blogObj, blogId)
   }
 
+  const handleDeleteBlog = (event) => {
+    event.preventDefault()
+    const ok = window.confirm(`Are you sure you want to remove blog \"${blog.title}\" by ${blog.author}?`)
+
+    if (ok) {
+      deleteBlog(blog)
+    }
+  }
+
   return (
     <div style={blogStyle}>
 
@@ -47,6 +57,7 @@ const Blog = ({ blog, addLike }) => {
           Url: {blog.url}<br/>
           Likes: {blog.likes}{" "}<button type="submit" onClick={handleAddLike}>Like</button><br/>
           Blog added by: {blog.user.name}<br/>
+          <button type="submit" onClick={handleDeleteBlog}>Remove</button><br/>
         </li>
       </div>
 

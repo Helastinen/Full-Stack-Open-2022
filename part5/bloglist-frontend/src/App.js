@@ -39,7 +39,7 @@ const App = () => {
   const notify = (note, type = "info") => {
     setNotification({ note, type })
     setTimeout(() => setNotification(null),
-    4000)
+    5000)
   }
 
   //* Event handlers: login
@@ -84,10 +84,11 @@ const App = () => {
   const submitBlog = async (blogObj) => {
     try {
       const addedBlog = await blogService.addBlog(blogObj)
-      blogService.getAll().then(blogs => setBlogs(blogs))
+      blogService
+        .getAll()
+        .then(blogs => setBlogs(blogs))
       submitBlogRef.current.toggleVisibility()
 
-      console.log("Submitting blog succesfully", addedBlog)
       notify(`\"${addedBlog.title}\" by ${addedBlog.author} added succesfully`)
     }
     catch (exception) {
@@ -99,11 +100,29 @@ const App = () => {
   const addLike = async (blogObj, blogId) => {
     try {
       const changedBlog = await blogService.addLike(blogObj, blogId)
-      blogService.getAll().then(blogs => setBlogs(blogs))
+      blogService
+        .getAll()
+        .then(blogs => setBlogs(blogs))
+
       notify(`Added like to \"${changedBlog.title}\" succesfully`)
     }
     catch (exception) {
       notify("Adding a like failed", "error")
+    }
+  }
+
+  //* Event handlers: delete blog
+  const deleteBlog = async (blogObj) => {
+    try {
+      await blogService.deleteBlog(blogObj)
+      blogService
+        .getAll()
+        .then(blogs => setBlogs(blogs))
+
+      notify(`Deleted blog \"${blogObj.title}\" succesfully`)
+    } 
+    catch (exception) {
+      notify(`Deleting blog \"${blogObj.title}\" failed. Only the blogs submitter can delete it`, "error")
     }
   }
 
@@ -153,7 +172,7 @@ const App = () => {
               <SubmitBlog submitBlog={submitBlog} /> 
             </Togglable>
             
-            <BlogList blogs={blogs} addLike={addLike} />
+            <BlogList blogs={blogs} addLike={addLike} deleteBlog={deleteBlog} />
           </div>
        }
     </div>
