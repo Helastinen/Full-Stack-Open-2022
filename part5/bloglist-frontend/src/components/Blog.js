@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-escape */
 import { useState } from "react"
+import PropTypes from "prop-types"
 
 const blogStyle = {
   paddingTop: 10,
@@ -76,6 +77,13 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
 
     </div>  
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  addLike: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 export default Blog
