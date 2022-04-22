@@ -60,14 +60,14 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
           <button type="submit" onClick={() => setShowBlogDetails(false)}>
             Hide
           </button><br/>
-          
+
           Url: {blog.url}<br/>
-          
+
           Likes: {blog.likes}{" "}
           <button type="submit" onClick={handleAddLike}>
             Like
           </button><br/>
-          
+
           Blog added by: {blog.user.name}<br/>
           <div style={showIfUserIsBlogSubmitter}>
             <button type="submit" onClick={handleDeleteBlog}>Remove</button><br/>
@@ -75,7 +75,7 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
         </li>
       </div>
 
-    </div>  
+    </div>
   )
 }
 

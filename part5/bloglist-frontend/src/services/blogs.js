@@ -1,6 +1,5 @@
-/* eslint-disable import/no-anonymous-default-export */
-import axios from 'axios'
-const baseUrl = '/api/blogs'
+import axios from "axios"
+const baseUrl = "/api/blogs"
 
 // creating tokens
 let token = null
@@ -17,7 +16,7 @@ const getAll = () => {
 const addBlog = async (newBlogObj) => {
   const config = {
     headers: { Authorization: token },
-  } 
+  }
 
   const response = await axios.post(baseUrl, newBlogObj, config)
   return response.data
@@ -26,7 +25,7 @@ const addBlog = async (newBlogObj) => {
 const addLike = async (blogObj, blogId) => {
   const config = {
     headers: { Authorization: token },
-  } 
+  }
 
   const response = await axios.put(`${baseUrl}/${blogId}`, blogObj, config)
   return response.data

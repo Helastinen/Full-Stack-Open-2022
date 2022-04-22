@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable semi */
 /* eslint-disable no-useless-escape */
 import { useState, useEffect, useRef } from "react"
 
@@ -12,7 +14,7 @@ import loginService from "./services/login"
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState(null)
-  
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
@@ -20,14 +22,14 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    )  
+    )
   }, [])
 
   useEffect(() => {
     const localStorageUser = window.localStorage.getItem("localBloglistUser")
     if (localStorageUser) {
       const user = JSON.parse(localStorageUser)
-      
+
       setUser(user)
       blogService.setToken(user.token)
     }
@@ -38,7 +40,7 @@ const App = () => {
   const notify = (note, type = "info") => {
     setNotification({ note, type })
     setTimeout(() => setNotification(null),
-    5000)
+      5000)
   }
 
   //* Event handlers: login
@@ -47,7 +49,7 @@ const App = () => {
 
     try {
       const user = await loginService.login(username, password)
-      
+
       window.localStorage.setItem("localBloglistUser", JSON.stringify(user))
       blogService.setToken(user.token)
 
@@ -55,7 +57,7 @@ const App = () => {
       setUsername("")
       setPassword("")
       console.log(window.localStorage);
-    } 
+    }
     catch (exception) {
       notify("Login failed, wrong password or username", "error")
     }
@@ -63,7 +65,7 @@ const App = () => {
 
   const handleLogout = (event) => {
     console.log("logout attempt with: ", window.localStorage)
-    
+
     try {
       window.localStorage.removeItem("localBloglistUser")
       setUser(null)
@@ -92,7 +94,7 @@ const App = () => {
     }
     catch (exception) {
       notify("Submitting blog failed: Check that blog has title and url", "error")
-    } 
+    }
   }
 
   //* Event handlers: add like to blog
@@ -119,7 +121,7 @@ const App = () => {
         .then(blogs => setBlogs(blogs))
 
       notify(`Deleted blog \"${blogObj.title}\" succesfully`)
-    } 
+    }
     catch (exception) {
       notify(`Deleting blog \"${blogObj.title}\" failed. Only the blogs submitter can delete it`, "error")
     }
@@ -128,29 +130,29 @@ const App = () => {
   //* Templates (JSX)
   const loginForm = () => (
     <form onSubmit={handleLogin}>
-        <div>Username:{" "}
-          <input 
-            type="text"
-            value={username}
-            name="Username"
-            onChange={handleUsername} 
-          />
-        </div>
+      <div>Username:{" "}
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={handleUsername}
+        />
+      </div>
 
-        <div>
+      <div>
           Password: {" "}
-          <input 
-            type="password"
-            value={password}
-            name="Password"
-            onChange={handlePassword} 
-          />
-        </div>
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={handlePassword}
+        />
+      </div>
 
-        <div>
-          <button type="submit">Login</button>
-        </div>
-      </form>
+      <div>
+        <button type="submit">Login</button>
+      </div>
+    </form>
   )
 
   return (
@@ -159,21 +161,21 @@ const App = () => {
 
       <Notification notification={notification} />
 
-      { user === null 
-        ? loginForm() 
+      { user === null
+        ? loginForm()
         : <div>
-            <p>
-              <i>{user.name}</i> logged in.{" "} 
-              <button type="submit" onClick={handleLogout}>Logout</button>
-            </p>
-      
-            <Togglable buttonLabel="New blog" ref={submitBlogRef}>
-              <SubmitBlog submitBlog={submitBlog} /> 
-            </Togglable>
-            
-            <BlogList blogs={blogs} addLike={addLike} deleteBlog={deleteBlog} user={user} />
-          </div>
-       }
+          <p>
+            <i>{user.name}</i> logged in.{" "}
+            <button type="submit" onClick={handleLogout}>Logout</button>
+          </p>
+
+          <Togglable buttonLabel="New blog" ref={submitBlogRef}>
+            <SubmitBlog submitBlog={submitBlog} />
+          </Togglable>
+
+          <BlogList blogs={blogs} addLike={addLike} deleteBlog={deleteBlog} user={user} />
+        </div>
+      }
     </div>
   )
 }

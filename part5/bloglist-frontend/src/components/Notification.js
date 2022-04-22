@@ -2,7 +2,7 @@ const Notification = ({ notification }) => {
   if (notification === null) {
     return null
   }
-  
+
   const style = {
     color: notification.type === "error" ? "red" : "green",
     background: "lightgrey",
@@ -12,7 +12,7 @@ const Notification = ({ notification }) => {
     padding: 5,
     marginBottom: 5,
   }
-  
+
   return (
     <div style={style}>
       {notification.note}
