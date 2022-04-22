@@ -5,9 +5,6 @@ import { render, screen } from "@testing-library/react"
 
 import Blog from "./Blog"
 
-import loginService from "../services/login"
-import blogService from "../services/blogs"
-
 describe("Single blog in bloglist", () => {
   let container
 
@@ -49,5 +46,20 @@ describe("Single blog in bloglist", () => {
 
     const detailsShown = container.querySelector(".detailsShown")
     expect(detailsShown).toHaveStyle("display: none")
+  })
+
+  test("blog's url and number of likes are shown when \"View\" button has been clicked", async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText("View")
+    await user.click(button)
+
+    const detailsShown = container.querySelector(".detailsShown")
+    expect(detailsShown).not.toHaveStyle("display: none")
+
+    const urlElement = screen.getByText(`${blog.url}`, { exact: false })
+    expect(urlElement).toBeDefined()
+
+    const likesElement = screen.getByText(`${blog.likes}`, { exact: false })
+    expect(likesElement).toBeDefined()
   })
 })
