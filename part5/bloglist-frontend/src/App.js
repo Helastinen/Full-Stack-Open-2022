@@ -33,8 +33,6 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-
-    console.log(window.localStorage)
   }, [])
 
   const notify = (note, type = "info") => {
@@ -56,7 +54,6 @@ const App = () => {
       setUser(user)
       setUsername("")
       setPassword("")
-      console.log(window.localStorage);
     }
     catch (exception) {
       notify("Login failed, wrong password or username", "error")
@@ -64,12 +61,9 @@ const App = () => {
   }
 
   const handleLogout = (event) => {
-    console.log("logout attempt with: ", window.localStorage)
-
     try {
       window.localStorage.removeItem("localBloglistUser")
       setUser(null)
-      console.log("LocalStorage after succesful logout:", window.localStorage)
     }
     catch (exception) {
       notify("Logout failed", "error")
