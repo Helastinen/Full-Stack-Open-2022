@@ -19,7 +19,6 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
 
   const showIfUserIsBlogSubmitter = { display: blog.user.username === user.username ? "" : "none" }
 
-
   const handleAddLike = (event) => {
     event.preventDefault()
 
@@ -47,14 +46,14 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
   return (
     <div style={blogStyle}>
 
-      <div style={hideWhenDetailsVisible}>
+      <div style={hideWhenDetailsVisible} className="detailsHidden">
         <li key={blog.id}>
           {blog.title} by {blog.author}{" "}
           <button type="submit" onClick={() => setShowBlogDetails(true)}>View</button>
         </li>
       </div>
 
-      <div style={showWhenDetailsVisible}>
+      <div style={showWhenDetailsVisible} className="detailsShown">
         <li key={blog.id}>
           {blog.title} by {blog.author}{" "}
           <button type="submit" onClick={() => setShowBlogDetails(false)}>
@@ -70,7 +69,9 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
 
           Blog added by: {blog.user.name}<br/>
           <div style={showIfUserIsBlogSubmitter}>
-            <button type="submit" onClick={handleDeleteBlog}>Remove</button><br/>
+            <button type="submit" onClick={handleDeleteBlog}>
+              Remove
+            </button><br/>
           </div>
         </li>
       </div>
