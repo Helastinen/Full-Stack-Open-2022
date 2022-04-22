@@ -26,7 +26,7 @@ const SubmitBlog = ({ submitBlog }) => {
   }
 
   return (
-    <div>
+    <div className="submitBlog">
       <h3>Submit a new blog</h3>
 
       <form onSubmit={handleSubmitBlog}>
@@ -36,6 +36,7 @@ const SubmitBlog = ({ submitBlog }) => {
             type="text"
             value={title}
             name="Title"
+            placeholder="Title"
             onChange={handleTitle}
           />
         </div>
@@ -46,6 +47,7 @@ const SubmitBlog = ({ submitBlog }) => {
             type="text"
             value={url}
             name="URL"
+            placeholder="Url"
             onChange={handleUrl}
           />
         </div>
@@ -56,6 +58,7 @@ const SubmitBlog = ({ submitBlog }) => {
             type="text"
             value={author}
             name="Author"
+            placeholder="Author"
             onChange={handleAuthor}
           />
         </div>

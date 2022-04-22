@@ -5,7 +5,7 @@ import { render, screen } from "@testing-library/react"
 
 import Blog from "./Blog"
 
-describe("Single blog in bloglist", () => {
+describe("Blog in bloglist", () => {
   let container
 
   const blog = {
