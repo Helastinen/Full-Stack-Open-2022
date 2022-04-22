@@ -26,9 +26,9 @@ describe("Single blog in bloglist", () => {
     token: "dummytoken1234567890"
   }
 
-  beforeEach(() => {
-    const mockHandler = jest.fn()
+  const mockHandler = jest.fn()
 
+  beforeEach(() => {
     container = render(<Blog
       blog={blog}
       addLike={mockHandler}
@@ -61,5 +61,17 @@ describe("Single blog in bloglist", () => {
 
     const likesElement = screen.getByText(`${blog.likes}`, { exact: false })
     expect(likesElement).toBeDefined()
+  })
+
+  test("if the like button is clicked twice, the event handler is called twice", async () => {
+    const user = userEvent.setup()
+    const viewButton = screen.getByText("View")
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText("Like")
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
