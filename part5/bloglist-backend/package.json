@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "inspect": "nodemon --inspect index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "author": "Antti Hellsten",
   "license": "ISC",
