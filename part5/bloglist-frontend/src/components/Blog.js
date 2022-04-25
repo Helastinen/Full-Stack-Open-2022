@@ -26,7 +26,9 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
       title: blog.title,
       url: blog.url,
       author: blog.author,
-      likes: Number(blog.likes + 1), // parse to number in case blog has no likes (would resolve as Nan)
+      likes: blog.likes // check if blogs likes property exists
+        ? blog.likes + 1
+        : 1,
       user: blog.user.id
     }
     const blogId = blog.id
@@ -49,27 +51,27 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
       <div style={hideWhenDetailsVisible} className="detailsHidden">
         <li key={blog.id}>
           {blog.title} by {blog.author}{" "}
-          <button type="submit" onClick={() => setShowBlogDetails(true)}>View</button>
+          <button type="submit" id="view" onClick={() => setShowBlogDetails(true)}>View</button>
         </li>
       </div>
 
       <div style={showWhenDetailsVisible} className="detailsShown">
         <li key={blog.id}>
           {blog.title} by {blog.author}{" "}
-          <button type="submit" onClick={() => setShowBlogDetails(false)}>
+          <button type="submit" id="hide" onClick={() => setShowBlogDetails(false)}>
             Hide
           </button><br/>
 
           Url: {blog.url}<br/>
 
           Likes: {blog.likes}{" "}
-          <button type="submit" onClick={handleAddLike}>
+          <button type="submit" id="like" onClick={handleAddLike}>
             Like
           </button><br/>
 
           Blog added by: {blog.user.name}<br/>
           <div style={showIfUserIsBlogSubmitter}>
-            <button type="submit" onClick={handleDeleteBlog}>
+            <button type="submit" id="remove" onClick={handleDeleteBlog}>
               Remove
             </button><br/>
           </div>

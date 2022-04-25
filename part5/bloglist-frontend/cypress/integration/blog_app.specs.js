@@ -1,7 +1,9 @@
 describe("Blog app", function() {
   beforeEach(function() {
+    // initialize users and blogs db's
     cy.request("POST", "http://localhost:3003/api/testing/reset")
 
+    //* create user
     const user = {
       name: "Superuser",
       username: "root",
@@ -41,18 +43,13 @@ describe("Blog app", function() {
 
   describe("When logged in...", function() {
     beforeEach(function() {
-      cy.get("#username").type("root")
-      cy.get("#password").type("salainen")
-      cy.get("button").contains("Login").click()
-
-      cy.contains("Superuser logged in")
+      cy.login({ username: "root", password: "salainen" })
     })
 
-    it("user can create a new blog", function() {
-      cy.get("button").contains("New blog").click()
+    it("user can create a new blog (5.19.)", function() {
+      cy.contains("New blog").click()
 
       cy.contains("Submit a new blog")
-
       cy.get("#title").type("Test blog")
       cy.get("#url").type("http://www.testblog.com")
       cy.get("#author").type("Test author")
@@ -60,6 +57,24 @@ describe("Blog app", function() {
 
       cy.get(".notification").contains("\"Test blog\" by Test author added succesfully")
       cy.get(".detailsHidden").contains("Test blog by Test author")
+    })
+
+    describe("When a blog exists...", function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: "Initial blog",
+          url: "https://www.initialblog.com",
+          author: "Initial blog author"
+        })
+      })
+
+      it("user can like the blog (5.20)", function() {
+        cy.get("#view").click()
+        cy.get("#like").click()
+
+        cy.get(".notification").contains("Added like to \"Initial blog\" succesfully")
+        cy.contains("Likes: 1")
+      })
     })
   })
 })
