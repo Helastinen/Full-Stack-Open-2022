@@ -127,6 +127,7 @@ const App = () => {
       <div>Username:{" "}
         <input
           type="text"
+          id="username"
           value={username}
           name="Username"
           onChange={handleUsername}
@@ -137,6 +138,7 @@ const App = () => {
           Password: {" "}
         <input
           type="password"
+          id="password"
           value={password}
           name="Password"
           onChange={handlePassword}
