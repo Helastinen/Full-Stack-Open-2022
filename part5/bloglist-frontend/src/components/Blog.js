@@ -58,20 +58,20 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
       <div style={showWhenDetailsVisible} className="detailsShown">
         <li key={blog.id}>
           {blog.title} by {blog.author}{" "}
-          <button type="submit" id="hide" onClick={() => setShowBlogDetails(false)}>
+          <button type="submit" id="hideButton" onClick={() => setShowBlogDetails(false)}>
             Hide
           </button><br/>
 
           Url: {blog.url}<br/>
 
           Likes: {blog.likes}{" "}
-          <button type="submit" id="like" onClick={handleAddLike}>
+          <button type="submit" id="likeButton" onClick={handleAddLike}>
             Like
           </button><br/>
 
           Blog added by: {blog.user.name}<br/>
           <div style={showIfUserIsBlogSubmitter}>
-            <button type="submit" id="remove" onClick={handleDeleteBlog}>
+            <button type="submit" id="removeButton" onClick={handleDeleteBlog}>
               Remove
             </button><br/>
           </div>

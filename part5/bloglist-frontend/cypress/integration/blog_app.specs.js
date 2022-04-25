@@ -70,10 +70,18 @@ describe("Blog app", function() {
 
       it("user can like the blog (5.20)", function() {
         cy.get("#view").click()
-        cy.get("#like").click()
+        cy.get("#likeButton").click()
 
         cy.get(".notification").contains("Added like to \"Initial blog\" succesfully")
         cy.contains("Likes: 1")
+      })
+
+      it("user who created the blog can delete it (5.21)", function() {
+        cy.get("#view").click()
+        cy.get("#removeButton").click()
+
+        cy.get(".notification").contains("Deleted blog \"Initial blog\" succesfully")
+        cy.get("#view").should("not.exist")
       })
     })
   })
