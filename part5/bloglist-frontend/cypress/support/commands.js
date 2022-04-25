@@ -8,12 +8,12 @@ Cypress.Commands.add("login", ({ username, password }) => {
   })
 })
 
-Cypress.Commands.add("createBlog", ({ title, url, author }) => {
+Cypress.Commands.add("createBlog", ({ title, url, author, likes = 0 }) => {
   cy.request({
     method: "POST",
     url: "http://localhost:3003/api/blogs",
     body: {
-      title, url, author
+      title, url, author, likes
     },
     headers: {
       "Authorization": `bearer ${JSON.parse(localStorage.getItem("localBloglistUser")).token}`

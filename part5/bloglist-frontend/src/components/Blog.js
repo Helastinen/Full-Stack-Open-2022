@@ -46,12 +46,12 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
 
       <div style={hideWhenDetailsVisible} className="detailsHidden">
         <li key={blog.id}>
           {blog.title} by {blog.author}{" "}
-          <button type="submit" id="view" onClick={() => setShowBlogDetails(true)}>View</button>
+          <button type="submit" id="viewButton" onClick={() => setShowBlogDetails(true)}>View</button>
         </li>
       </div>
 

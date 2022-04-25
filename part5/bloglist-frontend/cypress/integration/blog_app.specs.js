@@ -69,7 +69,7 @@ describe("Blog app", function() {
       })
 
       it("user can like the blog (5.20)", function() {
-        cy.get("#view").click()
+        cy.get("#viewButton").click()
         cy.get("#likeButton").click()
 
         cy.get(".notification").contains("Added like to \"Initial blog\" succesfully")
@@ -77,11 +77,11 @@ describe("Blog app", function() {
       })
 
       it("user who created the blog can delete it (5.21)", function() {
-        cy.get("#view").click()
+        cy.get("#viewButton").click()
         cy.get("#removeButton").click()
 
         cy.get(".notification").contains("Deleted blog \"Initial blog\" succesfully")
-        cy.get("#view").should("not.exist")
+        cy.get("#viewButton").should("not.exist")
       })
 
       it("other user can not delete the blog (5.21)", function() {
@@ -93,9 +93,34 @@ describe("Blog app", function() {
         cy.request("POST", "http://localhost:3003/api/users", user)
 
         cy.login({ username: "root2", password: "salainen2" })
-        cy.get("#view").click()
+        cy.get("#viewButton").click()
 
         cy.get("#removeButton").should("not.be.visible")
+      })
+    })
+
+    describe("When multiple blogs exists...", function() {
+      beforeEach(function() {
+        cy.createBlog({ title: "Blog 1", url: "https://www.blog1.com", likes: 3, author: "Blog author" })
+        cy.createBlog({ title: "Blog 2", url: "https://www.blog2.com", author: "Blog author" })
+        cy.createBlog({ title: "Blog 3", url: "https://www.blog3.com", likes: 4, author: "Blog author" })
+      })
+
+      it("blogs are ordered according to likes with the blog with the most likes being first", function() {
+        //* initial order
+        cy.get(".blog").eq(0).should("contain", "Blog 3")
+        cy.get(".blog").eq(1).should("contain", "Blog 1")
+        cy.get(".blog").eq(2).should("contain", "Blog 2")
+
+        //* Add likes and confirm that order changes
+        cy.get(".blog").eq(1).find("#viewButton").click()
+        cy.get(".blog").eq(1).find("#likeButton").click()
+        cy.get(".blog").eq(1).contains("Likes: 4")
+
+        //* blog has now moved to top of list
+        cy.get(".blog").eq(0).should("contain", "Blog 1")
+        cy.get(".blog").eq(1).should("contain", "Blog 3")
+        cy.get(".blog").eq(2).should("contain", "Blog 2")
       })
     })
   })
