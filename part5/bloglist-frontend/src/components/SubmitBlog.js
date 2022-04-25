@@ -34,6 +34,7 @@ const SubmitBlog = ({ submitBlog }) => {
         Title:{" "}
           <input
             type="text"
+            id="title"
             value={title}
             name="Title"
             placeholder="Title"
@@ -45,6 +46,7 @@ const SubmitBlog = ({ submitBlog }) => {
         URL:{" "}
           <input
             type="text"
+            id="url"
             value={url}
             name="URL"
             placeholder="Url"
@@ -56,6 +58,7 @@ const SubmitBlog = ({ submitBlog }) => {
         Author:{" "}
           <input
             type="text"
+            id="author"
             value={author}
             name="Author"
             placeholder="Author"
@@ -64,7 +67,7 @@ const SubmitBlog = ({ submitBlog }) => {
         </div>
 
         <div>
-          <button type="submit">Submit blog</button>
+          <button type="submit" id="submitBlog">Submit blog</button>
         </div>
       </form>
     </div>

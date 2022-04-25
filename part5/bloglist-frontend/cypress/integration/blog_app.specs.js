@@ -19,7 +19,7 @@ describe("Blog app", function() {
     cy.get("button").contains("Login")
   })
 
-  describe("login", function() {
+  describe("Login...", function() {
     it("succeeds with correct credentials (5.18)", function() {
       cy.get("#username").type("root")
       cy.get("#password").type("salainen")
@@ -33,9 +33,33 @@ describe("Blog app", function() {
       cy.get("#password").type("wrongPassword")
       cy.get("button").contains("Login").click()
 
-      cy.get(".error")
+      cy.get(".notification")
         .should("contain", "Login failed")
         .should("have.css", "color", "rgb(255, 0, 0)")
+    })
+  })
+
+  describe("When logged in...", function() {
+    beforeEach(function() {
+      cy.get("#username").type("root")
+      cy.get("#password").type("salainen")
+      cy.get("button").contains("Login").click()
+
+      cy.contains("Superuser logged in")
+    })
+
+    it("user can create a new blog", function() {
+      cy.get("button").contains("New blog").click()
+
+      cy.contains("Submit a new blog")
+
+      cy.get("#title").type("Test blog")
+      cy.get("#url").type("http://www.testblog.com")
+      cy.get("#author").type("Test author")
+      cy.get("#submitBlog").click()
+
+      cy.get(".notification").contains("\"Test blog\" by Test author added succesfully")
+      cy.get(".detailsHidden").contains("Test blog by Test author")
     })
   })
 })
