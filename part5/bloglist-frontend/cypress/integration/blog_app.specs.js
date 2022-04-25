@@ -83,6 +83,20 @@ describe("Blog app", function() {
         cy.get(".notification").contains("Deleted blog \"Initial blog\" succesfully")
         cy.get("#view").should("not.exist")
       })
+
+      it("other user can not delete the blog (5.21)", function() {
+        const user = {
+          name: "Test user 2",
+          username: "root2",
+          password: "salainen2"
+        }
+        cy.request("POST", "http://localhost:3003/api/users", user)
+
+        cy.login({ username: "root2", password: "salainen2" })
+        cy.get("#view").click()
+
+        cy.get("#removeButton").should("not.be.visible")
+      })
     })
   })
 })
