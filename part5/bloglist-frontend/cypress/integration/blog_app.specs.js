@@ -109,13 +109,13 @@ describe("Blog app", function() {
       it("blogs are ordered according to likes with the blog with the most likes being first", function() {
         //* initial order
         cy.get(".blog").eq(0).should("contain", "Blog 3")
-        cy.get(".blog").eq(1).should("contain", "Blog 1")
+        cy.get(".blog").eq(1).should("contain", "Blog 1").as("blog1")
         cy.get(".blog").eq(2).should("contain", "Blog 2")
 
         //* Add likes and confirm that order changes
-        cy.get(".blog").eq(1).find("#viewButton").click()
-        cy.get(".blog").eq(1).find("#likeButton").click()
-        cy.get(".blog").eq(1).contains("Likes: 4")
+        cy.get("@blog1").find("#viewButton").click()
+        cy.get("@blog1").find("#likeButton").click()
+        cy.get("@blog1").contains("Likes: 4")
 
         //* blog has now moved to top of list
         cy.get(".blog").eq(0).should("contain", "Blog 1")
