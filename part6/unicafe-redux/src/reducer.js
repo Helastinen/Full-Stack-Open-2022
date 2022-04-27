@@ -18,12 +18,13 @@ const counterReducer = (state = initialState, action) => {
       newState.bad += 1
       return newState
     case 'ZERO':
-      for (let type in newState) type = 0
+      for (const prop in newState) {
+        newState[prop] = 0
+      }
       return newState
     default: 
       return state
   }
-  
 }
 
 export default counterReducer
