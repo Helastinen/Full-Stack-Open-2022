@@ -23,6 +23,7 @@ const Anecdote = ({ anecdote, addVote }) => {
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
+  const filterTerm = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
   const addVote = (anecdote) => {
@@ -34,9 +35,13 @@ const AnecdoteList = () => {
     )
   }
 
+  //* show only filtered anecdotes and sort them by vote amount.
   return (
     <div>
-      {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+      {anecdotes
+        .filter(anecdote => anecdote.content.toLowerCase().includes(filterTerm.toLowerCase()))
+        .sort((a, b) => b.votes - a.votes)
+        .map(anecdote =>
         <div key={anecdote.id}>
           <Anecdote anecdote={anecdote} addVote={addVote} />
         </div>
