@@ -1,31 +1,47 @@
+/* eslint-disable no-useless-escape */
 import { useSelector, useDispatch } from 'react-redux'
 import { vote } from "../reducers/anecdoteReducer"
+import { setNotification, removeNotification } from "../reducers/notificationReducer"
+
+const style = {
+  marginBottom: 5,
+}
 
 const Anecdote = ({ anecdote, addVote }) => {
   return (
-    <>
-      <div>
+    <div style={style}>
+      <li>
         {anecdote.content}
-      </div>
+      </li>
       <div>
-        has {anecdote.votes}
-        <button onClick={() => addVote(anecdote.id)}>Vote</button>
+        has {anecdote.votes}{" "}
+        <button onClick={() => addVote(anecdote)}>Vote</button>
       </div>
-    </>
+    </div>
   )
 }
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
+  const filterTerm = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
-  const addVote = (id) => {
-    dispatch(vote(id))
+  const addVote = (anecdote) => {
+    dispatch(vote(anecdote.id))
+    dispatch(setNotification(`You voted \"${anecdote.content}\"`))
+    setTimeout(() => 
+      dispatch(removeNotification()),
+      5000
+    )
   }
 
+  //* show only filtered anecdotes and sort them by vote amount.
   return (
     <div>
-      {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+      {anecdotes
+        .filter(anecdote => anecdote.content.toLowerCase().includes(filterTerm.toLowerCase()))
+        .sort((a, b) => b.votes - a.votes)
+        .map(anecdote =>
         <div key={anecdote.id}>
           <Anecdote anecdote={anecdote} addVote={addVote} />
         </div>
