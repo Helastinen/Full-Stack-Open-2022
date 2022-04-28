@@ -10,11 +10,13 @@ const Notification = () => {
     borderWidth: 1,
     backgroundColor: "Moccasin",
   }
-  return (
-    <div style={style}>
-      {notification}
-    </div>
-  )
+  if ( notification.length > 0 ) {
+    return (
+      <div style={style}>
+        {notification}
+      </div>
+    )
+  }
 }
 
 export default Notification
