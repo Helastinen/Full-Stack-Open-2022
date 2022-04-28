@@ -50,6 +50,7 @@ const reducer = (state = initialState, action) => {
   }
 }
 
+//* Action creators
 export const vote = (id) => {
   return (
     {
