@@ -23,6 +23,7 @@ const Anecdote = ({ anecdote, addVote }) => {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
+  
   //* get filtered anecdotes and sort them by vote amount.
   const filteredAndSortedAnecdotes = useSelector(state => state.anecdotes
     .filter(anecdote => 
