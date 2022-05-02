@@ -1,12 +1,12 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState } from 'react'
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Link,
-  useParams,
-  useMatch
+  useMatch,
+  useNavigate
 } from "react-router-dom"
 
 const Menu = () => {
@@ -71,21 +71,25 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
     props.addNew({
       content,
       author,
       info,
       votes: 0
     })
+    props.notify(content)
+
+    navigate("/")
   }
 
   return (
     <div>
-      <h2>create a new anecdote</h2>
+      <h2>Create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           Content{" "}
@@ -126,8 +130,15 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
-  const match = useMatch("anecdotes/:id")
+  const notify = (content) => {
+    setNotification(`A new anecdote \"${content}\" was created!`)
+    setTimeout(() => {
+      setNotification("")
+    }, 5000);
+  }
 
+  // find correct anecdote based on anecdote id
+  const match = useMatch("anecdotes/:id")
   const anecdote = match
     ? anecdotes.find(anecdote => 
         anecdote.id === Number(match.params.id)
@@ -153,18 +164,23 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const textStyle = {
+    color: "green"
+  }
+
   return (
       <div>
         <h1>Software anecdotes</h1>
-
         <Menu />
+        <p style={textStyle}>{notification}</p>
+
         <Routes>
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
           <Route path="/about" element={<About />} />
-          <Route path="/create" element={<CreateNew addNew={addNew} />} />
-        </Routes><br/>
-        <Footer />
+          <Route path="/create" element={<CreateNew addNew={addNew} notify={notify} />} />
+        </Routes>
+        <p><Footer /></p>
       </div>
   )
 }
