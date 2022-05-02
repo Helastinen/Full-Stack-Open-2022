@@ -83,10 +83,14 @@ const CreateNew = (props) => {
       info: info.value,
       votes: 0
     })
-
     props.notify(content.value)
-
     navigate("/")
+  }
+
+  const handleReset = (e) => {
+    content.onReset()
+    author.onReset()
+    info.onReset()
   }
 
   return (
@@ -102,7 +106,8 @@ const CreateNew = (props) => {
         <div>
           Url for more info{" "} <input {...info} />
         </div>
-        <button>Create</button>
+        <button type="submit">Create</button>{" "}
+        <button type="reset" onClick={handleReset}>Reset</button>
       </form>
     </div>
   )
