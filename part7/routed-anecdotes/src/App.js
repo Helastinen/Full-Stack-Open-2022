@@ -8,6 +8,7 @@ import {
   useMatch,
   useNavigate
 } from "react-router-dom"
+import { useField } from "./hooks/customHooks"
 
 const Menu = () => {
   const padding = {
@@ -68,21 +69,22 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField("text")
+  const author = useField("text")
+  const info = useField("text")
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
-    props.notify(content)
+
+    props.notify(content.value)
 
     navigate("/")
   }
@@ -92,22 +94,18 @@ const CreateNew = (props) => {
       <h2>Create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          Content{" "}
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          Content{" "} <input {...content} />
         </div>
         <div>
-          Author{" "}
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          Author{" "} <input {...author} />
         </div>
         <div>
-          Url for more info{" "}
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          Url for more info{" "} <input {...info} />
         </div>
         <button>Create</button>
       </form>
     </div>
   )
-
 }
 
 const App = () => {
@@ -172,7 +170,8 @@ const App = () => {
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
-        <p style={textStyle}>{notification}</p>
+        <br/>
+        <div style={textStyle}>{notification}</div>
 
         <Routes>
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
@@ -180,7 +179,8 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/create" element={<CreateNew addNew={addNew} notify={notify} />} />
         </Routes>
-        <p><Footer /></p>
+        <br/>
+        <div><Footer /></div>
       </div>
   )
 }
