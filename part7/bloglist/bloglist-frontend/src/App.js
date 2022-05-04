@@ -148,7 +148,7 @@ const App = () => {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit">Login</Button>
+      <Button variant="primary" className="m-2" type="submit">Login</Button>
     </Form>
   )
 
@@ -163,7 +163,7 @@ const App = () => {
         : <div>
           <p>
             <i>{user.name}</i> logged in.{" "}
-            <Button variant="outline-primary" type="submit" onClick={handleLogout}>Logout</Button>
+            <Button variant="outline-primary" className="m-2" type="submit" onClick={handleLogout}>Logout</Button>
           </p>
 
           <Togglable buttonLabel="New blog" ref={submitBlogRef}>

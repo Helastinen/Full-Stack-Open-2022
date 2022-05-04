@@ -49,28 +49,28 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
 
       <div style={hideWhenDetailsVisible} className="detailsHidden">
         <div key={blog.id}>
-          {blog.title} by {blog.author}{" "}
-          <Button variant="primary" type="submit" id="viewButton" onClick={() => setShowBlogDetails(true)}>View</Button>
+          <b>{blog.title}</b> by <b>{blog.author}{" "}</b>
+          <Button variant="primary" className="m-2" type="submit" id="viewButton" onClick={() => setShowBlogDetails(true)}>View</Button>
         </div>
       </div>
 
       <div style={showWhenDetailsVisible} className="detailsShown">
         <div key={blog.id}>
-          {blog.title} by {blog.author}{" "}
-          <Button variant="outline-primary" type="submit" id="hideButton" onClick={() => setShowBlogDetails(false)}>
+          <b>{blog.title}</b> by <b>{blog.author}{" "}</b>
+          <Button variant="outline-primary" className="m-2" type="submit" id="hideButton" onClick={() => setShowBlogDetails(false)}>
             Hide
           </Button><br/>
 
-          Url: {blog.url}<br/>
+          Url: <b>{blog.url}</b><br/>
 
-          Likes: {blog.likes}{" "}
-          <Button variant="success" type="submit" id="likeButton" onClick={handleAddLike}>
+          Likes: <b>{blog.likes}{" "}</b>
+          <Button variant="success" className="m-2" type="submit" id="likeButton" onClick={handleAddLike}>
             Like
           </Button><br/>
 
           Blog added by: {blog.user.name}<br/>
           <div style={showIfUserIsBlogSubmitter}>
-            <Button variant="danger" type="submit" id="removeButton" onClick={handleDeleteBlog}>
+            <Button variant="danger" className="m-2" type="submit" id="removeButton" onClick={handleDeleteBlog}>
               Remove
             </Button><br/>
           </div>

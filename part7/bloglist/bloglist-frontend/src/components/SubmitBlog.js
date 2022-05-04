@@ -62,7 +62,7 @@ const SubmitBlog = ({ submitBlog }) => {
             onChange={handleAuthor}
           />
 
-          <Button variant="primary" type="submit" id="submitBlog">
+          <Button variant="primary" className="m-2" type="submit" id="submitBlog">
             Submit blog
           </Button>
         </Form.Group>
