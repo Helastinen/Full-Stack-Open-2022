@@ -2,7 +2,7 @@
 /* eslint-disable semi */
 /* eslint-disable no-useless-escape */
 import { useState, useEffect, useRef } from "react"
-import { Form, Button, Navbar, Nav } from "react-bootstrap"
+import { Button, Navbar, Nav } from "react-bootstrap"
 import "./App.css"
 import {
   BrowserRouter as Router,
@@ -13,6 +13,7 @@ import Users from "./components/Users"
 import BlogList from "./components/BlogList"
 import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
+import LoginForm from "./components/LoginForm"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -28,13 +29,13 @@ const App = () => {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs(blogs))
-
     usersService
       .getAll()
       .then(users => setUsers(users))
+
+    blogService
+      .getAll()
+      .then(blogs => setBlogs(blogs))
   }, [])
   console.log("Blogs in app:", blogs)
   console.log("Users in app:", users)
@@ -48,6 +49,7 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+  console.log("User (in App):", user)
 
   const notify = (note, type = "info") => {
     setNotification({ note, type })
@@ -133,91 +135,88 @@ const App = () => {
     }
   }
 
-  //* Templates (JSX)
-  const loginForm = () => (
-    <Form onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <Form.Group>
-        <Form.Label>Username:</Form.Label>
-        <Form.Control
-          type="text"
-          id="username"
-          value={username}
-          name="Username"
-          onChange={handleUsername}
-        />
-      </Form.Group>
-
-      <Form.Group>
-        <Form.Label>Password:</Form.Label>
-        <Form.Control
-          type="password"
-          id="password"
-          value={password}
-          name="Password"
-          onChange={handlePassword}
-        />
-      </Form.Group>
-
-      <Button variant="primary" className="m-2" type="submit">Login</Button>
-    </Form>
-  )
-
   const padding = {
-    padding: 5
+    padding: 5,
+    /*border: 2,
+    borderStyle: "solid"*/
+  }
+
+  const border = {
+    border: 2,
+    borderStyle: "solid"
   }
 
   return (
     <div className="container">
-      <Router>
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id ="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#" as="span">
-                <Link style={padding} to="/">Blogs</Link>
-              </Nav.Link>
-              <Nav.Link href="#" as="span">
-                <Link style={padding} to="/newblog">Create Blog</Link>
-              </Nav.Link>
-              <Nav.Link href="#" as="span">
-                <Link style={padding} to="/users">Users</Link>
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+      {user === null
+        ? <>
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id ="responsive-navbar-nav">
+              <Nav className="container-fluid">
+                <Navbar.Brand>Bloglist app</Navbar.Brand>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
 
-        <Notification notification={notification} />
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            handleUsername={handleUsername}
+            password={password}
+            handlePassword={handlePassword}
+          />
+        </>
+        : <Router>
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id ="responsive-navbar-nav">
+              <Nav className="container-fluid">
+                <Navbar.Brand>Bloglist app</Navbar.Brand>
+                <Nav.Link href="#" as="span">
+                  <Link style={padding} to="/">Blogs</Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <Link style={padding} to="/newblog">Create Blog</Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <Link style={padding} to="/users">Users</Link>
+                </Nav.Link>
+                <Nav.Item className="me-auto">
+                  {user !== null
+                    ? <div style={border}>
+                      <i>{user.name}</i> logged in.{" "}
+                      <Button variant="outline-primary" className="m-2" type="submit" onClick={handleLogout}>Logout</Button>
+                    </div>
+                    : null
+                  }
+                </Nav.Item>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
 
-        <Routes>
-          <Route
-            path="/"
-            element={<BlogList
-              blogs={blogs}
-              addLike={addLike}
-              deleteBlog={deleteBlog}
-              user={user}
-            />}
-          />
-          <Route
-            path="/newblog"
-            element={<SubmitBlog submitBlog={submitBlog} />}
-          />
-          <Route
-            path="/users"
-            element={<Users users={users} blogs={blogs} />}
-          />
-        </Routes>
-      </Router>
+          <Notification notification={notification} />
 
-      { user === null
-        ? loginForm()
-        : <div>
-          <p>
-            <i>{user.name}</i> logged in.{" "}
-            <Button variant="outline-primary" className="m-2" type="submit" onClick={handleLogout}>Logout</Button>
-          </p>
-        </div>
+          <Routes>
+            <Route
+              path="/"
+              element={<BlogList
+                blogs={blogs}
+                addLike={addLike}
+                deleteBlog={deleteBlog}
+                user={user}
+              />}
+            />
+            <Route
+              path="/newblog"
+              element={<SubmitBlog submitBlog={submitBlog} />}
+            />
+            <Route
+              path="/users"
+              element={<Users users={users} blogs={blogs} />}
+            />
+          </Routes>
+        </Router>
       }
     </div>
   )
