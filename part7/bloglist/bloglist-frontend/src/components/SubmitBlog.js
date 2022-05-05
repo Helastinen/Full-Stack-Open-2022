@@ -1,14 +1,17 @@
 import { useState } from "react"
 import { Form, Button } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
 
 const SubmitBlog = ({ submitBlog }) => {
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const [author, setAuthor] = useState("")
+  const navigate = useNavigate()
 
   const handleTitle = (event) => setTitle(event.target.value)
   const handleUrl = (event) => setUrl(event.target.value)
   const handleAuthor = (event) => setAuthor(event.target.value)
+
 
   const handleSubmitBlog = (event) => {
     event.preventDefault()
@@ -24,6 +27,16 @@ const SubmitBlog = ({ submitBlog }) => {
     setTitle("")
     setUrl("")
     setAuthor("")
+
+    navigate("/")
+  }
+
+  const handleCancel = () => {
+    setTitle("")
+    setUrl("")
+    setAuthor("")
+
+    navigate("/")
   }
 
   return (
@@ -64,6 +77,9 @@ const SubmitBlog = ({ submitBlog }) => {
 
           <Button variant="primary" className="m-2" type="submit" id="submitBlog">
             Submit blog
+          </Button>
+          <Button variant="outline-primary" className="m-2" id="cancel" onClick={handleCancel}>
+            Cancel
           </Button>
         </Form.Group>
       </Form>
