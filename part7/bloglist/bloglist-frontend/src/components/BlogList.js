@@ -38,5 +38,4 @@ BlogList.propTypes = {
   user: PropTypes.object.isRequired,
 }
 
-
 export default BlogList

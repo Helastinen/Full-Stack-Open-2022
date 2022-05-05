@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import { Form, Button } from "react-bootstrap"
 import "./App.css"
 
+import Users from "./components/Users"
 import BlogList from "./components/BlogList"
 import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
@@ -12,6 +13,7 @@ import Togglable from "./components/Togglable"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
+import usersService from "./services/users"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,12 +22,14 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
+  const [users, setUsers] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService
+      .getAll()
+      .then(blogs => setBlogs(blogs))
   }, [])
+  console.log("blogs in app:", blogs)
 
   useEffect(() => {
     const localStorageUser = window.localStorage.getItem("localBloglistUser")
@@ -36,6 +40,13 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  useEffect(() => {
+    usersService
+      .getAll()
+      .then(users => setUsers(users))
+  }, [])
+  console.log("users in app:", users)
 
   const notify = (note, type = "info") => {
     setNotification({ note, type })
@@ -165,6 +176,8 @@ const App = () => {
             <i>{user.name}</i> logged in.{" "}
             <Button variant="outline-primary" className="m-2" type="submit" onClick={handleLogout}>Logout</Button>
           </p>
+
+          <Users users={users} blogs={blogs} />
 
           <Togglable buttonLabel="New blog" ref={submitBlogRef}>
             <SubmitBlog submitBlog={submitBlog} />
