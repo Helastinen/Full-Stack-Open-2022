@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable semi */
 /* eslint-disable no-useless-escape */
-import { useState, useEffect, useRef } from "react"
-import { Button, Navbar, Nav } from "react-bootstrap"
+import { useState, useEffect } from "react"
+import { Navbar, Nav } from "react-bootstrap"
 import "./App.css"
 import {
   BrowserRouter as Router,
@@ -14,6 +14,7 @@ import BlogList from "./components/BlogList"
 import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
+import LoggedIn from "./components/LoggedIn"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -28,6 +29,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [users, setUsers] = useState([])
 
+  //* Effect hooks
   useEffect(() => {
     usersService
       .getAll()
@@ -135,15 +137,24 @@ const App = () => {
     }
   }
 
-  const padding = {
-    padding: 5,
+  //* Styles
+  const linkItems = {
+    color: "white",
     /*border: 2,
     borderStyle: "solid"*/
   }
 
-  const border = {
-    border: 2,
-    borderStyle: "solid"
+  const blogList = {
+    paddingLeft: 10,
+    paddingRight: 20,
+    paddingTop: 0,
+    paddingBottom: 0,
+    /*border: 2,
+    borderStyle: "solid"*/
+  }
+
+  const h3 = {
+    padding: 0
   }
 
   return (
@@ -154,7 +165,7 @@ const App = () => {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id ="responsive-navbar-nav">
               <Nav className="container-fluid">
-                <Navbar.Brand>Bloglist app</Navbar.Brand>
+                <Navbar.Brand style={blogList}><h3 style={h3}>Bloglist app</h3></Navbar.Brand>
               </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -171,25 +182,23 @@ const App = () => {
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id ="responsive-navbar-nav">
-              <Nav className="container-fluid">
-                <Navbar.Brand>Bloglist app</Navbar.Brand>
+              <Nav className="container-fluid pt-2" >
+                <Navbar.Brand style={blogList}><h3>Bloglist app</h3></Navbar.Brand>
+
                 <Nav.Link href="#" as="span">
-                  <Link style={padding} to="/">Blogs</Link>
+                  <Link style={linkItems} to="/">Blogs</Link>
                 </Nav.Link>
+
                 <Nav.Link href="#" as="span">
-                  <Link style={padding} to="/newblog">Create Blog</Link>
+                  <Link style={linkItems} to="/newblog">Create Blog</Link>
                 </Nav.Link>
+
                 <Nav.Link href="#" as="span">
-                  <Link style={padding} to="/users">Users</Link>
+                  <Link style={linkItems} to="/users">Users</Link>
                 </Nav.Link>
-                <Nav.Item className="me-auto">
-                  {user !== null
-                    ? <div style={border}>
-                      <i>{user.name}</i> logged in.{" "}
-                      <Button variant="outline-primary" className="m-2" type="submit" onClick={handleLogout}>Logout</Button>
-                    </div>
-                    : null
-                  }
+
+                <Nav.Item className="ms-auto">
+                  <LoggedIn user={user} handleLogout={handleLogout} />
                 </Nav.Item>
               </Nav>
             </Navbar.Collapse>

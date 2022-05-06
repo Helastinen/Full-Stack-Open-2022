@@ -8,7 +8,8 @@ const LoginForm = ({
   handlePassword
 }) => (
   <Form onSubmit={handleLogin}>
-    <h2>Login</h2>
+    <h3>Login</h3>
+
     <Form.Group>
       <Form.Label>Username:</Form.Label>
       <Form.Control
