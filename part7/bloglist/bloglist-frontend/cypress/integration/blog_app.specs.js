@@ -55,7 +55,7 @@ describe("Blog app", function() {
       cy.get("#author").type("Test author")
       cy.get("#submitBlog").click()
 
-      cy.get(".notification").contains("\"Test blog\" by Test author added succesfully")
+      cy.get(".notification").contains("\"Test blog\" by Test author added successfully")
       cy.get(".detailsHidden").contains("Test blog by Test author")
     })
 
@@ -72,7 +72,7 @@ describe("Blog app", function() {
         cy.get("#viewButton").click()
         cy.get("#likeButton").click()
 
-        cy.get(".notification").contains("Added like to \"Initial blog\" succesfully")
+        cy.get(".notification").contains("Added like to \"Initial blog\" successfully")
         cy.contains("Likes: 1")
       })
 
@@ -80,7 +80,7 @@ describe("Blog app", function() {
         cy.get("#viewButton").click()
         cy.get("#removeButton").click()
 
-        cy.get(".notification").contains("Deleted blog \"Initial blog\" succesfully")
+        cy.get(".notification").contains("Deleted blog \"Initial blog\" successfully")
         cy.get("#viewButton").should("not.exist")
       })
 

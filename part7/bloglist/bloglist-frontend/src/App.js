@@ -9,12 +9,13 @@ import {
   Routes, Route, Link
 } from "react-router-dom"
 
-import Users from "./components/Users"
+import UserList from "./components/UserList"
+import User from "./components/User"
 import BlogList from "./components/BlogList"
 import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
-import LoggedIn from "./components/LoggedIn"
+import Logout from "./components/Logout"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -100,7 +101,7 @@ const App = () => {
         .then(blogs => setBlogs(blogs))
       console.log("submitBlog fired:", blogs)
 
-      notify(`\"${addedBlog.title}\" by ${addedBlog.author} added succesfully`)
+      notify(`\"${addedBlog.title}\" by ${addedBlog.author} added successfully`)
     }
     catch (exception) {
       notify("Submitting blog failed: Check that blog has title and url", "error")
@@ -115,7 +116,7 @@ const App = () => {
         .getAll()
         .then(blogs => setBlogs(blogs))
 
-      notify(`Added like to \"${changedBlog.title}\" succesfully`)
+      notify(`Added like to \"${changedBlog.title}\" successfully`)
     }
     catch (exception) {
       notify("Adding a like failed", "error")
@@ -130,7 +131,7 @@ const App = () => {
         .getAll()
         .then(blogs => setBlogs(blogs))
 
-      notify(`Deleted blog \"${blogObj.title}\" succesfully`)
+      notify(`Deleted blog \"${blogObj.title}\" successfully`)
     }
     catch (exception) {
       notify(`Deleting blog \"${blogObj.title}\" failed. Only the blogs submitter can delete it`, "error")
@@ -198,7 +199,7 @@ const App = () => {
                 </Nav.Link>
 
                 <Nav.Item className="ms-auto">
-                  <LoggedIn user={user} handleLogout={handleLogout} />
+                  <Logout user={user} handleLogout={handleLogout} />
                 </Nav.Item>
               </Nav>
             </Navbar.Collapse>
@@ -222,7 +223,11 @@ const App = () => {
             />
             <Route
               path="/users"
-              element={<Users users={users} blogs={blogs} />}
+              element={<UserList users={users} blogs={blogs} />}
+            />
+            <Route
+              path="users/:id"
+              element={<User users={users} blogs={blogs} />}
             />
           </Routes>
         </Router>

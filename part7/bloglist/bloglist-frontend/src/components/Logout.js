@@ -5,7 +5,7 @@ const loggedIn = {
   borderStyle: "solid",*/
 }
 
-const LoggedIn = ({ user, handleLogout }) => {
+const Logout = ({ user, handleLogout }) => {
   return (
     <div style={loggedIn} className="text-white">
       <i>{user.name}</i> logged in.{" "}
@@ -16,4 +16,4 @@ const LoggedIn = ({ user, handleLogout }) => {
   )
 }
 
-export default LoggedIn
+export default Logout

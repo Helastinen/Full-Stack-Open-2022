@@ -1,7 +1,7 @@
 import { Table } from "react-bootstrap"
-import User from "./User"
+import UserRow from "./UserRow"
 
-const Users = ({ users, blogs }) => {
+const UserList = ({ users, blogs }) => {
   console.log("users:", users)
   console.log("blogs:", blogs)
 
@@ -16,7 +16,7 @@ const Users = ({ users, blogs }) => {
           </tr>
           {users.map(user =>
             <tr key={user.id}>
-              <User user={user} blogs={blogs} />
+              <UserRow user={user} blogs={blogs} />
             </tr>
           )}
         </tbody>
@@ -25,4 +25,4 @@ const Users = ({ users, blogs }) => {
   )
 }
 
-export default Users
+export default UserList
