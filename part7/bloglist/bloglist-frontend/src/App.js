@@ -66,7 +66,7 @@ const App = () => {
 
     try {
       const user = await loginService.login(username, password)
-
+      console.log("handleLogin user:", user)
       window.localStorage.setItem("localBloglistUser", JSON.stringify(user))
       blogService.setToken(user.token)
 
@@ -170,6 +170,8 @@ const App = () => {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
+
+          <Notification notification={notification} />
 
           <LoginForm
             handleLogin={handleLogin}
