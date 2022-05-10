@@ -12,6 +12,7 @@ import {
 import UserList from "./components/UserList"
 import User from "./components/User"
 import BlogList from "./components/BlogList"
+import Blog from "./components/Blog"
 import SubmitBlog from "./components/SubmitBlog"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
@@ -230,6 +231,15 @@ const App = () => {
             <Route
               path="users/:id"
               element={<User users={users} blogs={blogs} />}
+            />
+            <Route
+              path="blogs/:id"
+              element={<Blog
+                blogs={blogs}
+                addLike={addLike}
+                deleteBlog={deleteBlog}
+                user={user}
+              />}
             />
           </Routes>
         </Router>

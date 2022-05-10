@@ -1,6 +1,6 @@
 import { Alert } from "react-bootstrap"
 
-const style = {
+const notificationStyle = {
   marginTop: 10,
   /*border: 2,
   borderStyle: "solid"*/
@@ -12,9 +12,9 @@ const Notification = ({ notification }) => {
   }
 
   if (notification.type === "error") {
-    return <Alert variant="danger" style={style}>{notification.note}</Alert>
+    return <Alert variant="danger" style={notificationStyle}>{notification.note}</Alert>
   } else {
-    return <Alert variant="primary" style={style}>{notification.note}</Alert>
+    return <Alert variant="primary" style={notificationStyle}>{notification.note}</Alert>
   }
 }
 

@@ -1,27 +1,23 @@
-import Blog from "./Blog"
+import BlogRow from "./BlogRow"
 import PropTypes from "prop-types"
 import { Table } from "react-bootstrap"
 
-const BlogList = ({ blogs, addLike, deleteBlog, user }) => {
+const BlogList = ({ blogs }) => {
   return (
     <div>
       <h3>List of blogs</h3>
 
       <Table striped hover>
         <tbody>
+          <tr>
+            <th>Blog</th>
+            <th>Author</th>
+          </tr>
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map(blog =>
               <tr key={blog.id}>
-                <td>
-                  <Blog
-                    key={blog.id}
-                    blog={blog}
-                    addLike={addLike}
-                    deleteBlog={deleteBlog}
-                    user={user}
-                  />
-                </td>
+                <BlogRow key={blog.id} blog={blog} />
               </tr>
             )
           }

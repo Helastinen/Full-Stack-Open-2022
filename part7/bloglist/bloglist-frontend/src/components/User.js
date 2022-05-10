@@ -2,17 +2,13 @@ import { Table } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 
 const User = ({ users, blogs }) => {
-  const id = useParams().id
-  console.log("id", id)
-
   if (!users || users.length === 0) {
     return null
   }
 
+  const id = useParams().id
   const user = users.find(user => id === user.id)
-  console.log("user (in User):", user)
   const blogsAddedByUser = blogs.filter(blog => id === blog.user.id)
-  console.log("blogsAddedByUser:", blogsAddedByUser)
 
   return (
     <div>

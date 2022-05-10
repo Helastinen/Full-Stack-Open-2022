@@ -1,7 +1,8 @@
 /* eslint-disable no-useless-escape */
-import { useState } from "react"
 import PropTypes from "prop-types"
 import { Button } from "react-bootstrap"
+import { useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const blogStyle = {
   paddingTop: 10,
@@ -10,11 +11,19 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog, addLike, deleteBlog, user }) => {
-  const [showBlogDetails, setShowBlogDetails] = useState(false)
+const blogPadded = {
+  paddingTop: 10
+}
 
-  const hideWhenDetailsVisible = { display: showBlogDetails ? "none" : "" }
-  const showWhenDetailsVisible = { display: showBlogDetails ? "" : "none" }
+const Blog = ({ blogs, addLike, deleteBlog, user }) => {
+  const navigate = useNavigate()
+
+  if (!blogs || blogs.length === 0 || !user){
+    return null
+  }
+
+  const id = useParams().id
+  const blog = blogs.find(blog => id === blog.id)
 
   const showIfUserIsBlogSubmitter = { display: blog.user.username === user.username ? "" : "none" }
 
@@ -41,42 +50,48 @@ const Blog = ({ blog, addLike, deleteBlog, user }) => {
 
     if (ok) {
       deleteBlog(blog)
+      navigate("/")
     }
   }
 
   return (
     <div style={blogStyle} className="blog">
-
-      <div style={hideWhenDetailsVisible} className="detailsHidden">
-        <div key={blog.id}>
-          <b>{blog.title}</b> by <b>{blog.author}{" "}</b>
-          <Button variant="primary" className="m-2" type="submit" id="viewButton" onClick={() => setShowBlogDetails(true)}>View</Button>
-        </div>
+      <h3>{blog.title}</h3>
+      <div style={blogPadded}>
+        Author: <b>{blog.author}</b>
       </div>
 
-      <div style={showWhenDetailsVisible} className="detailsShown">
-        <div key={blog.id}>
-          <b>{blog.title}</b> by <b>{blog.author}{" "}</b>
-          <Button variant="outline-primary" className="m-2" type="submit" id="hideButton" onClick={() => setShowBlogDetails(false)}>
-            Hide
-          </Button><br/>
-
-          Url: <b>{blog.url}</b><br/>
-
-          Likes: <b>{blog.likes}{" "}</b>
-          <Button variant="success" className="m-2" type="submit" id="likeButton" onClick={handleAddLike}>
-            Like
-          </Button><br/>
-
-          Blog added by: {blog.user.name}<br/>
-          <div style={showIfUserIsBlogSubmitter}>
-            <Button variant="danger" className="m-2" type="submit" id="removeButton" onClick={handleDeleteBlog}>
-              Remove
-            </Button><br/>
-          </div>
-        </div>
+      <div style={blogPadded}>
+        Url: <b>{blog.url}</b>
       </div>
 
+      <div style={blogPadded}>
+        Likes: <b>{blog.likes}{" "}</b>
+        <Button
+          variant="success"
+          className="m-2"
+          type="submit"
+          id="likeButton"
+          onClick={handleAddLike}
+        >
+          Like
+        </Button>
+      </div>
+
+      <div style={blogPadded}>
+        Blog added by: <b>{blog.user.name}</b>{" "}
+        <span style={showIfUserIsBlogSubmitter}>
+          <Button
+            variant="danger"
+            className="m-2"
+            type="submit"
+            id="removeButton"
+            onClick={handleDeleteBlog}
+          >
+            Remove
+          </Button><br/>
+        </span>
+      </div>
     </div>
   )
 }
