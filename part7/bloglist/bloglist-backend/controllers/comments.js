@@ -4,8 +4,10 @@ const Comment = require("../models/comment")
 
 router.get("/:id/comments", async (request, response) => {
   const id = request.params.id
-  const comments = await Comment
-    .find({ id })
+  console.log("bloglist BE request id:", id)
+
+  const comments = await Comment.find({ blog: id })
+  console.log("response comments:", comments)
 
   response.json(comments)
 })
