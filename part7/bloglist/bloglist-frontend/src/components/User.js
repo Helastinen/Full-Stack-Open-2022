@@ -13,7 +13,7 @@ const User = ({ users, blogs }) => {
   return (
     <div>
       <h3>{user.name}</h3>
-      <h6>blogs added by user:</h6>
+      <h6>Blogs added by user:</h6>
       <Table striped hover>
         <tbody>
           {blogsAddedByUser.map(blog =>
