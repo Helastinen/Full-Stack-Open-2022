@@ -4,20 +4,20 @@ const Comment = require("../models/comment")
 
 router.get("/:id/comments", async (request, response) => {
   const id = request.params.id
-  console.log("bloglist BE request id:", id)
+  console.log("comments.js --> GET --> request (id):", id)
 
   const comments = await Comment.find({ blog: id })
-  console.log("response comments:", comments)
+  console.log("comments.js --> GET --> response (comments):", comments)
 
   response.json(comments)
 })
 
 router.post("/:id/comments", async (request, response) => {
   const comment = new Comment({ ...request.body, blog: request.params.id })
-  console.log("request Comment:", comment)
+  console.log("comments.js --> POST --> request (comment):", comment)
 
   const savedComment = await comment.save()
-  console.log("Saved comment:", savedComment)
+  console.log("comments.js --> POST --> SavedComment response (savedComment):", savedComment)
 
   // add comment id to blog db object
   /*const blogThatWasCommented = await Blog.findById(request.params.id)

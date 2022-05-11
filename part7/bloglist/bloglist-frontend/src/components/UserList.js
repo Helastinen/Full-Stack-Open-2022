@@ -2,9 +2,6 @@ import { Table } from "react-bootstrap"
 import UserRow from "./UserRow"
 
 const UserList = ({ users, blogs }) => {
-  console.log("users:", users)
-  console.log("blogs:", blogs)
-
   return (
     <div>
       <h3>Users</h3>

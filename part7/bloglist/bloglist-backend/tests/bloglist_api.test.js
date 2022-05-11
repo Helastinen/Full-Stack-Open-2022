@@ -141,7 +141,7 @@ describe("when there are some blogs in database...", () => {
           .get(`/api/blogs/${blogAtStart.id}/comments`)
 
         const comments = commentsAtEnd.body.map(c => c.comment)
-        console.log("comments:", comments)
+
         expect(comments).toContain("Test comment: This is the best blog ever!")
       })
     })

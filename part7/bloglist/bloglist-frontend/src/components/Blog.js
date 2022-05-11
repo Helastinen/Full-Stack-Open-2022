@@ -15,10 +15,9 @@ const paddingStyle = {
   paddingTop: 10
 }
 
-const Blog = ({ blogs, addLike, deleteBlog, user }) => {
+const Blog = ({ blogs, addLike, deleteBlog, user, comments, setComments, addComment }) => {
   const navigate = useNavigate()
   const blogId = useParams().id
-  console.log("blogId:", blogId)
 
   if (!blogs || blogs.length === 0 || !user) {
     return null
@@ -95,7 +94,7 @@ const Blog = ({ blogs, addLike, deleteBlog, user }) => {
         </span>
       </div>
 
-      <Comments blog={blog} />
+      <Comments blog={blog} comments={comments} setComments={setComments} addComment={addComment} />
     </div>
   )
 }

@@ -40,7 +40,7 @@ const SubmitBlog = ({ submitBlog }) => {
   }
 
   return (
-    <div className="submitBlog">
+    <div>
       <h3>Submit a new blog</h3>
 
       <Form onSubmit={handleSubmitBlog}>

@@ -19,11 +19,13 @@ import LoginForm from "./components/LoginForm"
 import Logout from "./components/Logout"
 
 import blogService from "./services/blogs"
+import commentsService from "./services/comments"
 import loginService from "./services/login"
 import usersService from "./services/users"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [comments, setComments] = useState([])
   const [notification, setNotification] = useState(null)
 
   const [username, setUsername] = useState("")
@@ -41,8 +43,9 @@ const App = () => {
       .getAll()
       .then(blogs => setBlogs(blogs))
   }, [])
-  console.log("Blogs in app:", blogs)
-  console.log("Users in app:", users)
+
+  console.log("App.js --> blogs:", blogs)
+  console.log("App.js --> users:", users)
 
   useEffect(() => {
     const localStorageUser = window.localStorage.getItem("localBloglistUser")
@@ -53,7 +56,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  console.log("User (in App):", user)
 
   const notify = (note, type = "info") => {
     setNotification({ note, type })
@@ -67,7 +69,7 @@ const App = () => {
 
     try {
       const user = await loginService.login(username, password)
-      console.log("handleLogin user:", user)
+      console.log("App.js --> handleLogin --> response (user):", user)
       window.localStorage.setItem("localBloglistUser", JSON.stringify(user))
       blogService.setToken(user.token)
 
@@ -100,7 +102,6 @@ const App = () => {
       blogService
         .getAll()
         .then(blogs => setBlogs(blogs))
-      console.log("submitBlog fired:", blogs)
 
       notify(`\"${addedBlog.title}\" by ${addedBlog.author} added successfully`)
     }
@@ -139,11 +140,27 @@ const App = () => {
     }
   }
 
+  //* Event handlers: adding a comment to a blog
+  const addComment = async (comment, blogId) => {
+    try {
+      await commentsService.create(comment, blogId)
+      commentsService
+        .getCommentsOfBlog(blogId)
+        .then(comments => {
+          console.log("App.js --> addComment --> response (comments):", comments)
+          setComments(comments)
+        })
+
+      notify(`Added comment \"${comment}\" successfully`)
+    }
+    catch (exception) {
+      notify(`Adding comment \"${comment}\" failed`, "error")
+    }
+  }
+
   //* Styles
   const linkItems = {
     color: "white",
-    /*border: 2,
-    borderStyle: "solid"*/
   }
 
   const blogList = {
@@ -151,8 +168,6 @@ const App = () => {
     paddingRight: 20,
     paddingTop: 0,
     paddingBottom: 0,
-    /*border: 2,
-    borderStyle: "solid"*/
   }
 
   const h3 = {
@@ -239,6 +254,9 @@ const App = () => {
                 addLike={addLike}
                 deleteBlog={deleteBlog}
                 user={user}
+                comments={comments}
+                setComments={setComments}
+                addComment={addComment}
               />}
             />
           </Routes>

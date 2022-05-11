@@ -10,30 +10,28 @@ const User = ({ users, blogs }) => {
   const user = users.find(user => id === user.id)
   const blogsAddedByUser = blogs.filter(blog => id === blog.user.id)
 
-  if (blogsAddedByUser.length === 0) {
-    return (
-      <div>
-        <h3>{user.name}</h3>
-        <p>This user has not added any blogs.</p>
-      </div>
-    )
-  }
-
   return (
     <div>
       <h3>{user.name}</h3>
-      <h6>Blogs added by user:</h6>
-      <Table striped hover>
-        <tbody>
-          {blogsAddedByUser.map(blog =>
-            <tr key={blog.id}>
-              <td>
-                {blog.title}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+
+      {blogsAddedByUser.length === 0
+        ? <p>This user has not added any blogs.</p>
+        : <>
+          <h6>Blogs added by user:</h6>
+
+          <Table striped hover>
+            <tbody>
+              {blogsAddedByUser.map(blog =>
+                <tr key={blog.id}>
+                  <td>
+                    {blog.title}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </>
+      }
     </div>
   )
 }
