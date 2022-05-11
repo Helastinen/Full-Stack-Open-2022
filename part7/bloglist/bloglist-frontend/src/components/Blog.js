@@ -2,8 +2,7 @@
 import PropTypes from "prop-types"
 import { Button } from "react-bootstrap"
 import { useParams, useNavigate } from "react-router-dom"
-import  { useState, useEffect } from "react"
-import commentsServive from "../services/comments"
+import Comments from "./Comments"
 
 const blogStyle = {
   paddingTop: 10,
@@ -12,27 +11,16 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const padding = {
+const paddingStyle = {
   paddingTop: 10
 }
 
 const Blog = ({ blogs, addLike, deleteBlog, user }) => {
-  const [comments, setComments] = useState([])
   const navigate = useNavigate()
   const blogId = useParams().id
   console.log("blogId:", blogId)
 
-  useEffect(() => {
-    commentsServive
-      .getCommentsOfBlog(blogId)
-      .then(c => {
-        console.log("getCommentsOfBlog response:", c)
-        setComments(c)
-      })
-  }, [])
-  console.log("comments (in Blog):", comments)
-
-  if (!blogs || blogs.length === 0 || !user || !comments){
+  if (!blogs || blogs.length === 0 || !user) {
     return null
   }
 
@@ -40,6 +28,7 @@ const Blog = ({ blogs, addLike, deleteBlog, user }) => {
 
   const showIfUserIsBlogSubmitter = { display: blog.user.username === user.username ? "" : "none" }
 
+  //* Event handlers
   const handleAddLike = (event) => {
     event.preventDefault()
 
@@ -70,15 +59,15 @@ const Blog = ({ blogs, addLike, deleteBlog, user }) => {
   return (
     <div style={blogStyle} className="blog">
       <h3>{blog.title}</h3>
-      <div style={padding}>
+      <div style={paddingStyle}>
         Author: <b>{blog.author}</b>
       </div>
 
-      <div style={padding}>
+      <div style={paddingStyle}>
         Url: <b>{blog.url}</b>
       </div>
 
-      <div style={padding}>
+      <div style={paddingStyle}>
         Likes: <b>{blog.likes}{" "}</b>
         <Button
           variant="success"
@@ -91,7 +80,7 @@ const Blog = ({ blogs, addLike, deleteBlog, user }) => {
         </Button>
       </div>
 
-      <div style={padding}>
+      <div style={paddingStyle}>
         Blog added by: <b>{blog.user.name}</b>{" "}
         <span style={showIfUserIsBlogSubmitter}>
           <Button
@@ -106,19 +95,7 @@ const Blog = ({ blogs, addLike, deleteBlog, user }) => {
         </span>
       </div>
 
-      <h4 style={padding}>Comments</h4>
-      <div>
-        {/*<ListGroup>
-          {comments.map(comment => {
-            <ListGroup.Item>{comment.comment}</ListGroup.Item>
-          })}
-        </ListGroup>*/}
-        <ul>
-          {comments.map(c =>
-            <li key={c.id}> {c.comment}</li>
-          )}
-        </ul>
-      </div>
+      <Comments blog={blog} />
     </div>
   )
 }

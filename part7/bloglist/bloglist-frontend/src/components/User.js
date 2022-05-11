@@ -10,6 +10,15 @@ const User = ({ users, blogs }) => {
   const user = users.find(user => id === user.id)
   const blogsAddedByUser = blogs.filter(blog => id === blog.user.id)
 
+  if (blogsAddedByUser.length === 0) {
+    return (
+      <div>
+        <h3>{user.name}</h3>
+        <p>This user has not added any blogs.</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h3>{user.name}</h3>
