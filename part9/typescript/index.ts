@@ -1,5 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import calculateBmi from "./bmiCalculator";
 import calculateExercises from "./exerciseCalculator";
@@ -39,9 +41,7 @@ app.get("/bmi", (req, res) => {
 app.post("/exercises", (req, res) => {
   console.log("reqData:", req.body);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getParameter = (obj: any, param: string): any => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const value = obj[param];
     if (!value ) {
       throw new Error("parameters missing");
@@ -54,8 +54,6 @@ app.post("/exercises", (req, res) => {
     const dailyExercises = getParameter(req.body, "daily_exercises");
     const target = getParameter(req.body, "target");
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const allNumbers = Array.isArray(dailyExercises) && dailyExercises.every((day) => {
         return typeof day === "number";
     });
@@ -64,7 +62,6 @@ app.post("/exercises", (req, res) => {
       throw new Error("malformatted parameters");
     }
     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const exerciseData = calculateExercises(dailyExercises, target);
 
     res
