@@ -1,0 +1,6 @@
+[submodule "part9/Patientor/frontend/patientor"]
+	path = part9/Patientor/frontend/patientor
+	url = https://github.com/fullstack-hy2020/patientor.git
+[submodule "part9/Patientor/part9/Patientor/frontend/patientor"]
+	path = part9/Patientor/part9/Patientor/frontend/patientor
+	url = https://github.com/fullstack-hy2020/patientor.git
