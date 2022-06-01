@@ -12,7 +12,8 @@ router.get("/", (_req, res) => {
 router.get("/:id", (req, res) => {
     const id = parseId(req.params.id); // parsing, validation and type guards
     const patient = patientsService.getPatient(id);
-
+    console.log("Patient:", patient);
+    
     if (patient) {
       res.send(patient);
     } else {
