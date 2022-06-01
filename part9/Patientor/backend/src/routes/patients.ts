@@ -1,12 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express from "express";
 import patientsService from "../services/patientsService";
-import toNewPatient from "../utils";
+import { toNewPatient, parseId } from "../utils";
 
 const router = express.Router();
 
 router.get("/", (_req, res) => {
   res.send(patientsService.getPatients());
+});
+
+router.get("/:id", (req, res) => {
+    const id = parseId(req.params.id); // parsing, validation and type guards
+    const patient = patientsService.getPatient(id);
+
+    if (patient) {
+      res.send(patient);
+    } else {
+      res.status(404);
+    }
 });
 
 router.post("/", (req, res) => {

@@ -57,7 +57,8 @@ type PatientFields = {
   dateOfBirth: unknown,
   ssn: unknown,
   gender: unknown,
-  occupation: unknown
+  occupation: unknown,
+  entries: unknown
 };
 
 const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation }: PatientFields)
@@ -67,9 +68,18 @@ const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation }: PatientFie
     dateOfBirth: parseDoB(dateOfBirth),
     ssn: parseSsn(ssn),
     gender: parseGender(gender),
-    occupation: parseOccupation(occupation)
+    occupation: parseOccupation(occupation),
+    entries: []
   };
   return newPatient;
 };
 
-export default toNewPatient;
+const parseId = (id: unknown): string => {
+  if ( !id || !isString(id) ) {
+    throw new Error("Incorrect or missing id: " + id);
+  }
+  return id;
+};
+
+
+export { toNewPatient, parseId };
