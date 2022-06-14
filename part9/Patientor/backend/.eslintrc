@@ -26,6 +26,6 @@
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "Patientor/backend/tsconfig.json"
+    "project": "./tsconfig.json"
   }
 }

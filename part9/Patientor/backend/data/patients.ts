@@ -12,7 +12,7 @@ const patientData = [
         "entries": []
     },
     {
-        "id": "d2773598-f723-11e9-8f0b-362b9e155667",
+        "id": "a35c55ff-17c3-4f35-b567-a0d8c07e6507",
         "name": "Martin Riggs",
         "dateOfBirth": "1979-01-30",
         "ssn": "300179-77A",
@@ -21,7 +21,7 @@ const patientData = [
         "entries": []
     },
     {
-        "id": "d27736ec-f723-11e9-8f0b-362b9e155667",
+        "id": "361750ff-ec04-47eb-889b-5dc0166c40d8",
         "name": "Hans Gruber",
         "dateOfBirth": "1970-04-25",
         "ssn": "250470-555L",
@@ -30,7 +30,7 @@ const patientData = [
         "entries": []
     },
     {
-        "id": "d2773822-f723-11e9-8f0b-362b9e155667",
+        "id": "618dce7e-523c-4c78-ad5e-918098697b76",
         "name": "Dana Scully",
         "dateOfBirth": "1974-01-05",
         "ssn": "050174-432N",
@@ -39,7 +39,7 @@ const patientData = [
         "entries": []
     },
     {
-        "id": "d2773c6e-f723-11e9-8f0b-362b9e155667",
+        "id": "b14aa90c-9c49-4f6e-823d-38119c5262dd",
         "name": "Matti Luukkainen",
         "dateOfBirth": "1971-04-09",
         "ssn": "090471-8890",
@@ -51,8 +51,8 @@ const patientData = [
 
 const patients: Patient[] = patientData.map(obj => {
     const object = toNewPatient(obj) as Patient;
-    console.log("Object:", object);
     object.id = obj.id;
+
     return object;
 });
 

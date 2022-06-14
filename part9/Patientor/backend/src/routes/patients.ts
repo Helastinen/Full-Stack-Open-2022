@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express from "express";
 import patientsService from "../services/patientsService";
 import { toNewPatient, parseId } from "../utils";
@@ -12,7 +11,7 @@ router.get("/", (_req, res) => {
 router.get("/:id", (req, res) => {
     const id = parseId(req.params.id); // parsing, validation and type guards
     const patient = patientsService.getPatient(id);
-    console.log("Patient:", patient);
+    console.log("Routes -> patients.ts -> patient:", patient);
     
     if (patient) {
       res.send(patient);

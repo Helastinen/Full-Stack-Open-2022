@@ -68,13 +68,12 @@ type PatientFields = {
   name: unknown,
   dateOfBirth: unknown,
   ssn: unknown,
-  gender: unknown,
+  gender: unknown,  
   occupation: unknown,
-  entries: unknown
+  entries?: unknown
 };
 
-const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation, entries }: PatientFields)
-  : NewPatient => {
+const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation, entries = [] }: PatientFields): NewPatient => {
   const newPatient: NewPatient = {
     name: parseName(name),
     dateOfBirth: parseDoB(dateOfBirth),
@@ -83,7 +82,7 @@ const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation, entries }: P
     occupation: parseOccupation(occupation),
     entries: parseEntries(entries)
   };
-  console.log("newPatient:", newPatient);
+  console.log("utis.ts -> toNewPatient -> newPatient:", newPatient);
   
   return newPatient;
 };
