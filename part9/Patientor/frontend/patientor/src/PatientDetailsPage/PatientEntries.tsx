@@ -15,13 +15,13 @@ const PatientEntries = ({ patient }: { patient: Patient }) => {
           <>
             <Table style={{ marginBottom: "1em" }}>
               <TableBody>
-                <TableRow key={entry.id}> 
-                  <TableCell>{entry.date} {entry.description}</TableCell>
+                <TableRow> 
+                  <TableCell key={entry.id}>{entry.date} {entry.description}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
             
-            <PatientDiagnosis entry={entry} />
+            <PatientDiagnosis entry={entry} key={entry.id}/>
           </>
       ))}
 
