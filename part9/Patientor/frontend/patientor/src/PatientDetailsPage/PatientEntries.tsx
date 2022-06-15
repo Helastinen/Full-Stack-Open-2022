@@ -1,9 +1,92 @@
 import { Table, TableCell, TableRow, TableBody, Typography } from "@material-ui/core";
+import { MonitorHeart, LocalHospital, Sick } from '@mui/icons-material/';
 
-import { Patient, Entry } from "../types";
+import { Patient, Entry, Discharge, SickLeave, HealthCheckRating } from "../types";
 import PatientDiagnosis from "./PatientDiagnosis";
+import HealthRatingBar from "../components/HealthRatingBar";
+
+const HealthCheck = ({ healthCheckRating }: { healthCheckRating: HealthCheckRating }) => {
+  return (
+    <>
+      healthCheckRating: {healthCheckRating} {" "}
+      <HealthRatingBar showText={false} rating={healthCheckRating} /><br/>
+    </>
+  );
+};
+
+const Hospital = ({ discharge }: { discharge: Discharge }) => {
+  
+  return (
+    <>
+      Discharge:<br/>
+      <ul>
+        <li>{discharge.date}</li>
+        <li>{discharge.criteria}</li>
+      </ul>
+    </>
+  );
+};
+
+const OccupationalHealthcareSickLeave = ({ sickLeave }: { sickLeave: SickLeave }) => {
+
+  return (
+    <>
+      Sickleave:<br/>
+      <ul>
+        <li>{sickLeave.startDate}</li>
+        <li>{sickLeave.endDate}</li>
+      </ul>
+    </>
+  );
+};
 
 const PatientEntries = ({ patient }: { patient: Patient }) => {
+  const assertNever = (value: never): never => {
+    throw new Error(
+      `Unhandled discriminated union member: ${JSON.stringify(value)}`
+    );
+  };
+  
+  const entryType = (entry: Entry) => {
+    switch (entry.type) {
+      case "HealthCheck":
+        return <HealthCheck healthCheckRating={entry.healthCheckRating}/>;
+
+      case "Hospital":
+        return <Hospital discharge={entry.discharge} />;
+
+      case "OccupationalHealthcare":
+        if (entry.sickLeave) {  
+          return (
+            <>
+              Employer: {entry.employerName}<br/>
+              <OccupationalHealthcareSickLeave sickLeave={entry.sickLeave} />
+            </>
+          );
+        }
+        
+        return <>Employer: {entry.employerName}<br/></>;
+        
+      default:
+        return assertNever(entry);
+    }
+  };
+
+  const entryIcon = (entry: Entry) => {
+    switch (entry.type){
+      case "HealthCheck":
+        return <MonitorHeart />;
+
+      case "Hospital":
+        return <LocalHospital />;
+
+      case "OccupationalHealthcare":
+        return <Sick />;
+
+        default:
+          return assertNever(entry);
+    }
+  };
 
   return (
     <>
@@ -16,12 +99,16 @@ const PatientEntries = ({ patient }: { patient: Patient }) => {
             <Table style={{ marginBottom: "1em" }}>
               <TableBody>
                 <TableRow> 
-                  <TableCell>{entry.date} {entry.description}</TableCell>
+                  <TableCell>
+                    <b>{entry.date}</b> {entryIcon(entry)}<br/>
+                    <PatientDiagnosis key={entry.id} entry={entry}/>
+                    Description: <i>{entry.description}</i><br/><br/>
+                    {entryType(entry)}
+                    Diagnose by <i>{entry.specialist}</i>.
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-            
-            <PatientDiagnosis key={entry.id} entry={entry}/>
           </>
       ))}
 

@@ -26,10 +26,10 @@ const BasicPatientData = ({ patient }: { patient: Patient }) => {
       <Table style={{ marginBottom: "1em" }}>
         <TableBody>
           <TableRow>
-            <TableCell>Ssn: {patient.ssn}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Occupation: {patient.occupation}</TableCell>
+            <TableCell style={{ borderBottom:"none" }}>
+              Ssn: {patient.ssn}<br/>
+              Occupation: {patient.occupation}
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
