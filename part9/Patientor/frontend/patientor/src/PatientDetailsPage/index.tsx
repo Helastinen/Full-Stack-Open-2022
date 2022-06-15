@@ -1,26 +1,18 @@
 import React from "react";
 import axios from "axios";
-import { Table } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { useEffect} from "react";
 
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
-
 import { useStateValue, getPatientDetails } from "../state";
-import { TableCell, TableRow, TableBody, Typography } from "@material-ui/core";
-import { Transgender, Female, Male } from "@mui/icons-material";
+
+import BasicPatientData from "./BasicPatientData";
+import PatientEntries from "./PatientEntries";
 
 const PatientDetailsPage = () => {
   const [{ patients }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
-
-  const patient = patients[id as string];
-  console.log("PatientDetailsPage.ts --> patient:", patient);
-  
-  if (patient === undefined) {
-    return null;
-  }
   
   useEffect(() => {
     console.log('PatientDetailsPage.ts: useEffect triggered');
@@ -39,42 +31,24 @@ const PatientDetailsPage = () => {
       }
     };
 
-    if (!patient.ssn || !patient.entries) {
+    // update patient ssn and entries to state only if they do not already exits there 
+    if ( patients[id as string] && ( !patients[id as string].ssn || !patients[id as string].entries )) {
       void getPatient(id as string);
     }
   }, [dispatch]);
-
-
-  const genderIcon = (patient: Patient) => {
-    switch (patient.gender) {
-      case "male":
-        return <Male />;
-      case "female":
-        return <Female />;
-      case "other":
-        return <Transgender />;
-      default:
-        return null;
-    }
-};
+  
+  const patient = patients[id as string];
+  
+  if (patient === undefined || !patients[id as string].ssn || !patients[id as string].entries) {
+    return null;
+  }
+  console.log("PatientDetailsPage.ts --> patient:", patient);
 
   return (
     <div>
       <p></p>
-    <Typography align="left" variant="h5">
-      {patient.name} {genderIcon(patient)}
-      </Typography>
-
-     <Table style={{ marginBottom: "1em" }}>
-        <TableBody>
-            <TableRow>
-              <TableCell>Ssn: {patient.ssn}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Occupation: {patient.occupation}</TableCell>
-            </TableRow>
-        </TableBody>
-  </Table>
+      <BasicPatientData patient={patient} />
+      <PatientEntries patient={patient} />
     </div>
   );
 };

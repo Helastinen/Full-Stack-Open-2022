@@ -47,12 +47,6 @@ const PatientListPage = () => {
     }
   };
 
-  /*const match = useMatch('/patients/:id');
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const patient = match
-    ? patients.find((patient: Patient) => patient.id === Number(match.params.id))
-    : null;*/
-
   return (
     <div className="App">
       <Box>

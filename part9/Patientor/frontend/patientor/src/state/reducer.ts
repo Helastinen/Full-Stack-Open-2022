@@ -48,13 +48,13 @@ export const reducer = (state: State, action: Action): State => {
       console.log("reducer.ts -> GET_PATIENT_DETAILS -> state:", s);
 
       const patientToChange = state.patients[action.payload.id];
-      console.log("...and patientToChange:", patientToChange);
+      console.log("reducer.ts -> GET_PATIENT_DETAILS -> patientToChange{}:", patientToChange);
       const changedPatient = { 
         ...patientToChange, 
         ssn: action.payload.ssn,
         entries: action.payload.entries
       };
-      console.log("...and changedPatient:", changedPatient);
+      console.log("reducer.ts -> GET_PATIENT_DETAILS -> changedPatient{}:", changedPatient);
 
       return {
         ...state,
