@@ -1,5 +1,5 @@
 import { State } from "./state";
-import { Patient } from "../types";
+import { Patient, Diagnosis } from "../types";
 
 export type Action =
   | {
@@ -13,9 +13,16 @@ export type Action =
   | {
       type: "GET_PATIENT_DETAILS";
       payload: Patient;
+  }
+  | {
+    type: "SET_DIAGNOSIS_LIST";
+    payload: Diagnosis[];
   };
 
 export const reducer = (state: State, action: Action): State => {
+  const s = {...state };
+  console.log("reducer.ts -> GET_PATIENT_DETAILS -> state:", s);
+
   switch (action.type) {
     case "SET_PATIENT_LIST":
       console.log("reducer.ts -> SET_PATIENT_LIST -> action.payload (patientListFromApi):", action.payload);
@@ -44,8 +51,6 @@ export const reducer = (state: State, action: Action): State => {
 
     case "GET_PATIENT_DETAILS":
       console.log("reducer.ts -> GET_PATIENT_DETAILS -> action.payload:", action.payload);  
-      const s = {...state };
-      console.log("reducer.ts -> GET_PATIENT_DETAILS -> state:", s);
 
       const patientToChange = state.patients[action.payload.id];
       console.log("reducer.ts -> GET_PATIENT_DETAILS -> patientToChange{}:", patientToChange);
@@ -63,6 +68,20 @@ export const reducer = (state: State, action: Action): State => {
           [action.payload.id]: changedPatient
         }
       };
+      case "SET_DIAGNOSIS_LIST":
+        console.log("reducer.ts -> SET_DIAGNOSIS_LIST -> action.payload:", action.payload);
+
+        return {
+          ...state,
+          diagnosis: {
+            ...action.payload.reduce(
+              (list, diagnose) => ({ ...list, [diagnose.code]: diagnose }),
+              {}
+            ),
+            ...state.diagnosis
+          }
+        };
+
     default:
       return state;
   }
@@ -86,5 +105,12 @@ export const getPatientDetails = (patient: Patient): Action => {
   return {
     type: "GET_PATIENT_DETAILS",
     payload: patient
+  };
+};
+
+export const setDiagnosisList = (diagnosis: Diagnosis[]): Action => {
+  return {
+    type: "SET_DIAGNOSIS_LIST",
+    payload: diagnosis
   };
 };

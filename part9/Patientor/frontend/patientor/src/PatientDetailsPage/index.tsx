@@ -32,14 +32,18 @@ const PatientDetailsPage = () => {
     };
 
     // update patient ssn and entries to state only if they do not already exits there 
-    if ( patients[id as string] && ( !patients[id as string].ssn || !patients[id as string].entries )) {
+    if ( patients[id as string] && 
+      ( !patients[id as string].ssn || 
+        !patients[id as string].entries )) {
       void getPatient(id as string);
     }
   }, [dispatch]);
   
   const patient = patients[id as string];
   
-  if (patient === undefined || !patients[id as string].ssn || !patients[id as string].entries) {
+  if (patient === undefined || 
+    !patients[id as string].ssn || 
+    !patients[id as string].entries) {
     return null;
   }
   console.log("PatientDetailsPage.ts --> patient:", patient);
@@ -48,7 +52,7 @@ const PatientDetailsPage = () => {
     <div>
       <p></p>
       <BasicPatientData patient={patient} />
-      <PatientEntries patient={patient} />
+      <PatientEntries key={patient.id} patient={patient} />
     </div>
   );
 };
