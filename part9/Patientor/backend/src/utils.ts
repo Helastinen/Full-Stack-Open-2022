@@ -1,4 +1,14 @@
-import { NewPatient, Gender, Entry, NewEntry, Diagnosis, HealthCheckRating, Type, Discharge, SickLeave } from "./types";
+import {
+  NewPatient,
+  Gender,
+  Entry,
+  NewEntry,
+  Diagnosis,
+  HealthCheckRating,
+  Type,
+  Discharge,
+  SickLeave,
+  NewBaseEntry } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -102,7 +112,8 @@ const parseId = (id: unknown): string => {
 };
 
 const isType = (type: unknown): type is Type => {
-  return typeof type === "object" || type instanceof String;
+  console.log("utils.ts --> isType() --> typeof type: ", typeof type);
+  return typeof type === "string" || type instanceof String;
 };
 
 const parseType = (type: unknown): Type => {
@@ -126,11 +137,11 @@ const parseSpecialist = (specialist: unknown): string => {
   return specialist;
 };
 
-const isDiagnosisCodes = (diagnosisCodes: unknown): diagnosisCodes is Diagnosis[] => {
+const isDiagnosisCodes = (diagnosisCodes: unknown): diagnosisCodes is Array<Diagnosis["code"]> => {
   return typeof diagnosisCodes === "object" || diagnosisCodes instanceof Array;
 };
 
-const parseDiagnosisCodes = (diagnosisCodes: unknown): Diagnosis[] => {
+const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis["code"]> => {
   if ( !diagnosisCodes || !isDiagnosisCodes(diagnosisCodes) ) {
     throw new Error("Incorrect or missing diagnosisCodes: " + diagnosisCodes);
   }
@@ -140,7 +151,7 @@ const parseDiagnosisCodes = (diagnosisCodes: unknown): Diagnosis[] => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ishealthCheckRating = (param: any): param is HealthCheckRating => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  return Object.values(Gender).includes(param);
+  return Object.values(HealthCheckRating).includes(param);
 };
 
 const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
@@ -209,18 +220,19 @@ const toNewEntry = ({
   employerName,
   sickLeave,
 }: EntryFields) : NewEntry => {
-  const baseEntry = {
+  const baseEntry: NewBaseEntry = {
     type: parseType(type),
     description: parseDescription(description),
     date: parseDate(date),
     specialist: parseSpecialist(specialist),
-    diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+    diagnosisCodes: parseDiagnosisCodes(diagnosisCodes), 
   };
 
-  switch (type) {
+  switch ((type)) {
     case "HealthCheck":
       const newHealthCheckEntry: NewEntry = {
         ...baseEntry,
+        type: "HealthCheck",
         healthCheckRating: parseHealthCheckRating(healthCheckRating),
       };
       console.log("utis.ts -> toNewEntry() -> newHealthCheckEntry{}:", newHealthCheckEntry);
@@ -229,6 +241,7 @@ const toNewEntry = ({
     case "Hospital":
       const newHospitalEntry: NewEntry = {
         ...baseEntry,
+        type: "Hospital",
         discharge: parseDischarge(discharge),
       };
       console.log("utis.ts -> toNewEntry() -> newHospitalEntry{}:", newHospitalEntry);
@@ -237,6 +250,7 @@ const toNewEntry = ({
     case "OccupationalHealthcare":
       const newOccupationalHealthcareEntry: NewEntry = {
         ...baseEntry,
+        type: "OccupationalHealthcare",
         employerName: parseEmployerName(employerName),
         sickLeave: parseSickLeave(sickLeave),
       };
@@ -244,7 +258,7 @@ const toNewEntry = ({
       return newOccupationalHealthcareEntry;
 
     default:
-      return assertNever(parseType(type));
+      return assertNever(type as never);
   }
 };
 

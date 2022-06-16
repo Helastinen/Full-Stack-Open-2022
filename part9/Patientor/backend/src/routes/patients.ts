@@ -42,7 +42,7 @@ router.post("/:id/entries", (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const newEntry = toNewEntry(req.body); // parsing, validation and type guards
     const addedEntry = patientsService.addEntry(newEntry, patientId);
-
+    console.log("patients.ts --> POST Entry --> addedEntry():", addedEntry);
     res.json(addedEntry);
   } catch (error: unknown) {
     let errorMessage = "";

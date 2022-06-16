@@ -38,8 +38,10 @@ const addEntry = (entry: NewEntry, patientId: string): Entry => {
     id: id,
     ...entry
   };
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  patients[patientId].entries.push(newEntry);
+  console.log("patientsService.ts --> addEntry() --> newEntry{}:", newEntry);
+ 
+  patients
+    .find(p => p.id === patientId)?.entries.push(newEntry);
 
   return newEntry;
 };
