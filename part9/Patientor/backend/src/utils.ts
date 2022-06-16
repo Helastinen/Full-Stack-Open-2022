@@ -1,4 +1,4 @@
-import { NewPatient, Gender, Entry } from "./types";
+import { NewPatient, Gender, Entry, NewEntry, Diagnosis, HealthCheckRating, Type, Discharge, SickLeave } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -15,7 +15,7 @@ const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
 
-const parseDoB = (DoB: unknown): string => {
+const parseDate = (DoB: unknown): string => {
   if ( !DoB || !isString(DoB) || !isDate(DoB) ) {
     throw new Error("Incorrect or missing date: " + DoB);
   }
@@ -73,16 +73,23 @@ type PatientFields = {
   entries?: unknown
 };
 
-const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation, entries = [] }: PatientFields): NewPatient => {
+const toNewPatient = ({ 
+  name,
+  dateOfBirth,
+  ssn,
+  gender,
+  occupation,
+  entries = []
+}: PatientFields): NewPatient => {
   const newPatient: NewPatient = {
     name: parseName(name),
-    dateOfBirth: parseDoB(dateOfBirth),
+    dateOfBirth: parseDate(dateOfBirth),
     ssn: parseSsn(ssn),
     gender: parseGender(gender),
     occupation: parseOccupation(occupation),
     entries: parseEntries(entries)
   };
-  console.log("utis.ts -> toNewPatient -> newPatient:", newPatient);
+  console.log("utis.ts -> toNewPatient() -> newPatient{}:", newPatient);
   
   return newPatient;
 };
@@ -94,5 +101,152 @@ const parseId = (id: unknown): string => {
   return id;
 };
 
+const isType = (type: unknown): type is Type => {
+  return typeof type === "object" || type instanceof String;
+};
 
-export { toNewPatient, parseId };
+const parseType = (type: unknown): Type => {
+  if ( !type || !isType(type) ) {
+    throw new Error("Incorrect or missing type: " + type);
+  }
+  return type;
+};
+
+const parseDescription = (description: unknown): string => {
+  if ( !description || !isString(description) ) {
+    throw new Error("Incorrect or missing description: " + description);
+  }
+  return description;
+};
+
+const parseSpecialist = (specialist: unknown): string => {
+  if ( !specialist || !isString(specialist) ) {
+    throw new Error("Incorrect or missing specialist: " + specialist);
+  }
+  return specialist;
+};
+
+const isDiagnosisCodes = (diagnosisCodes: unknown): diagnosisCodes is Diagnosis[] => {
+  return typeof diagnosisCodes === "object" || diagnosisCodes instanceof Array;
+};
+
+const parseDiagnosisCodes = (diagnosisCodes: unknown): Diagnosis[] => {
+  if ( !diagnosisCodes || !isDiagnosisCodes(diagnosisCodes) ) {
+    throw new Error("Incorrect or missing diagnosisCodes: " + diagnosisCodes);
+  }
+  return diagnosisCodes;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ishealthCheckRating = (param: any): param is HealthCheckRating => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(Gender).includes(param);
+};
+
+const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
+  if (!healthCheckRating || !ishealthCheckRating(healthCheckRating)) {
+    throw new Error("Incorrect or missing healthCheckRating: " + healthCheckRating);
+  }
+  
+  return healthCheckRating;
+};
+
+const isDischarge = (discharge: unknown): discharge is Discharge => {
+  return typeof discharge === "object" || discharge instanceof Array;
+};
+
+const parseDischarge = (discharge: unknown): Discharge => {
+  if ( !discharge || !isDischarge(discharge) ) {
+    throw new Error("Incorrect or missing discharge: " + discharge);
+  }
+  return discharge;
+};
+
+const parseEmployerName = (employerName: unknown): string => {
+  if ( !employerName || !isString(employerName) ) {
+    throw new Error("Incorrect or missing employerName: " + employerName);
+  }
+  return employerName;
+};
+
+const isSickLeave = (sickLeave: unknown): sickLeave is SickLeave => {
+  return typeof sickLeave === "object" || sickLeave instanceof Object;
+};
+
+const parseSickLeave = (sickLeave: unknown): SickLeave => {
+  if ( !isSickLeave(sickLeave) ) {
+    throw new Error("Missing sickLeave: " + sickLeave);
+  }
+  return sickLeave;
+};
+
+type EntryFields = {
+  type: unknown,
+  description: unknown,
+  date: unknown,
+  specialist: unknown,  
+  diagnosisCodes?: unknown,
+  healthCheckRating?: unknown,
+  discharge?: unknown,
+  employerName?: unknown,
+  sickLeave?: unknown
+};
+
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+const toNewEntry = ({ 
+  type,
+  description,
+  date,
+  specialist,
+  diagnosisCodes,
+  healthCheckRating,
+  discharge,
+  employerName,
+  sickLeave,
+}: EntryFields) : NewEntry => {
+  const baseEntry = {
+    type: parseType(type),
+    description: parseDescription(description),
+    date: parseDate(date),
+    specialist: parseSpecialist(specialist),
+    diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+  };
+
+  switch (type) {
+    case "HealthCheck":
+      const newHealthCheckEntry: NewEntry = {
+        ...baseEntry,
+        healthCheckRating: parseHealthCheckRating(healthCheckRating),
+      };
+      console.log("utis.ts -> toNewEntry() -> newHealthCheckEntry{}:", newHealthCheckEntry);
+      return newHealthCheckEntry;
+
+    case "Hospital":
+      const newHospitalEntry: NewEntry = {
+        ...baseEntry,
+        discharge: parseDischarge(discharge),
+      };
+      console.log("utis.ts -> toNewEntry() -> newHospitalEntry{}:", newHospitalEntry);
+      return newHospitalEntry;
+
+    case "OccupationalHealthcare":
+      const newOccupationalHealthcareEntry: NewEntry = {
+        ...baseEntry,
+        employerName: parseEmployerName(employerName),
+        sickLeave: parseSickLeave(sickLeave),
+      };
+      console.log("utis.ts -> toNewEntry() -> newOccupationalHealthcareEntry{}:",newOccupationalHealthcareEntry);
+      return newOccupationalHealthcareEntry;
+
+    default:
+      return assertNever(parseType(type));
+  }
+};
+
+
+export { toNewPatient, parseId, toNewEntry };

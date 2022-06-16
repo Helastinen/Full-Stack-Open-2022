@@ -1,6 +1,6 @@
 import { v1 as uuid } from "uuid";
 
-import { PublicPatientData, NewPatient, Patient } from "../types";
+import { PublicPatientData, NewPatient, Patient, NewEntry, Entry } from "../types";
 import patients from "../../data/patients";
 
 const getPatients = (): PublicPatientData[] => {
@@ -27,7 +27,21 @@ const addPatient = (patient: NewPatient): Patient => {
     ...patient
   };
   patients.push(newPatient);
+
   return newPatient;
 };
 
-export default { getPatients, getPatient, addPatient };
+const addEntry = (entry: NewEntry, patientId: string): Entry => {
+  const id = uuid();
+
+  const newEntry: Entry = {
+    id: id,
+    ...entry
+  };
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  patients[patientId].entries.push(newEntry);
+
+  return newEntry;
+};
+
+export default { getPatients, getPatient, addPatient, addEntry };

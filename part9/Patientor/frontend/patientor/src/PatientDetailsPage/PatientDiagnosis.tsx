@@ -42,7 +42,7 @@ const PatientDiagnosis = ({ entry }: { entry: Entry }) => {
           .values(entry.diagnosisCodes)
           .map((code: Diagnosis["code"]) => (
             <li key={code}>
-              {code} {' '}
+              {code} - {' '}
               {Object
                 .values(diagnosis)
                 .filter((codeObj: Diagnosis) => codeObj.code === code)

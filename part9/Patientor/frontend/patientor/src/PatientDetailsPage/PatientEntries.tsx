@@ -20,8 +20,8 @@ const Hospital = ({ discharge }: { discharge: Discharge }) => {
     <>
       Discharge:<br/>
       <ul>
-        <li>{discharge.date}</li>
-        <li>{discharge.criteria}</li>
+        <li key={discharge.date}>{discharge.date}</li>
+        <li key={discharge.criteria}>{discharge.criteria}</li>
       </ul>
     </>
   );
@@ -33,8 +33,8 @@ const OccupationalHealthcareSickLeave = ({ sickLeave }: { sickLeave: SickLeave }
     <>
       Sickleave:<br/>
       <ul>
-        <li>{sickLeave.startDate}</li>
-        <li>{sickLeave.endDate}</li>
+        <li key={sickLeave.startDate}>{sickLeave.startDate}</li>
+        <li key={sickLeave.endDate}>{sickLeave.endDate}</li>
       </ul>
     </>
   );
@@ -53,18 +53,17 @@ const PatientEntries = ({ patient }: { patient: Patient }) => {
         return <HealthCheck healthCheckRating={entry.healthCheckRating}/>;
 
       case "Hospital":
-        return <Hospital discharge={entry.discharge} />;
+        return <Hospital key={entry.discharge.criteria} discharge={entry.discharge} />;
 
       case "OccupationalHealthcare":
         if (entry.sickLeave) {  
           return (
             <>
               Employer: {entry.employerName}<br/>
-              <OccupationalHealthcareSickLeave sickLeave={entry.sickLeave} />
+              <OccupationalHealthcareSickLeave key={entry.sickLeave.startDate} sickLeave={entry.sickLeave} />
             </>
           );
         }
-        
         return <>Employer: {entry.employerName}<br/></>;
         
       default:
@@ -83,8 +82,8 @@ const PatientEntries = ({ patient }: { patient: Patient }) => {
       case "OccupationalHealthcare":
         return <Sick />;
 
-        default:
-          return assertNever(entry);
+      default:
+        return assertNever(entry);
     }
   };
 
