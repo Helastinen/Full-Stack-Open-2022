@@ -1,8 +1,9 @@
 import React from "react";
+import { useStateValue } from "../state";
 import { Grid, Button } from "@material-ui/core";
 import { Field, Formik, Form } from "formik";
 
-import { TextField } from "../AddPatientModal/FormField";
+import { TextField, DiagnosisSelection } from "../AddPatientModal/FormField";
 import { Entry } from "../types";
 
 /*
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
+  const [{ diagnosis }] = useStateValue();
   return (
     <Formik
       initialValues={{
@@ -32,7 +34,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
       }}
       onSubmit={onSubmit}
     >
-      {({ dirty }) => {
+      {({ dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -47,11 +49,16 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
               name="specialist"
               component={TextField}
             />
-            <Field
+            {/*<Field
               label="DiagnosisCodes"
               placeholder="DiagnosisCodes"
               name="diagnosisCodes"
               component={TextField}
+            />*/}
+            <DiagnosisSelection 
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              diagnoses={Object.values(diagnosis)}
             />
             <Field
               label="Description"
