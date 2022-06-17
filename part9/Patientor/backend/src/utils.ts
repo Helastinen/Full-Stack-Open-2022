@@ -155,7 +155,7 @@ const ishealthCheckRating = (param: any): param is HealthCheckRating => {
 };
 
 const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
-  if (!healthCheckRating || !ishealthCheckRating(healthCheckRating)) {
+if (( healthCheckRating !== 0 && !healthCheckRating ) || !ishealthCheckRating(healthCheckRating) ) {
     throw new Error("Incorrect or missing healthCheckRating: " + healthCheckRating);
   }
   
@@ -225,7 +225,7 @@ const toNewEntry = ({
     description: parseDescription(description),
     date: parseDate(date),
     specialist: parseSpecialist(specialist),
-    diagnosisCodes: parseDiagnosisCodes(diagnosisCodes), 
+    ...diagnosisCodes ? {diagnosisCodes: parseDiagnosisCodes(diagnosisCodes)} : null, 
   };
 
   switch ((type)) {
@@ -252,7 +252,7 @@ const toNewEntry = ({
         ...baseEntry,
         type: "OccupationalHealthcare",
         employerName: parseEmployerName(employerName),
-        sickLeave: parseSickLeave(sickLeave),
+        ...sickLeave ? {sickLeave: parseSickLeave(sickLeave)} : null,
       };
       console.log("utis.ts -> toNewEntry() -> newOccupationalHealthcareEntry{}:",newOccupationalHealthcareEntry);
       return newOccupationalHealthcareEntry;
