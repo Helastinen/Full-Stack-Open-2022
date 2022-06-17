@@ -1,4 +1,4 @@
-import { Table, TableCell, TableRow, TableBody, Typography } from "@material-ui/core";
+import { Table, TableCell, TableRow, TableBody } from "@material-ui/core";
 import { MonitorHeart, LocalHospital, Sick } from '@mui/icons-material/';
 
 import { Patient, Entry, Discharge, SickLeave, HealthCheckRating } from "../types";
@@ -89,8 +89,6 @@ const PatientEntries = ({ patient }: { patient: Patient }) => {
 
   return (
     <>
-      <Typography align="left" variant="h6">Entries</Typography>
-  
       {Object
         .values(patient.entries)
         .map((entry: Entry) => (

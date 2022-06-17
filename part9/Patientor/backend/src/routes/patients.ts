@@ -39,6 +39,7 @@ router.post("/", (req, res) => {
 router.post("/:id/entries", (req, res) => {
   try {
     const patientId = parseId(req.params.id); // parsing, validation and type guards
+    console.log("patients.ts --> POST Entry --> patientId:", patientId);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const newEntry = toNewEntry(req.body); // parsing, validation and type guards
     const addedEntry = patientsService.addEntry(newEntry, patientId);
