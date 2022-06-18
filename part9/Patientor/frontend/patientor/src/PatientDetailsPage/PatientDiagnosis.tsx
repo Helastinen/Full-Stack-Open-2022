@@ -30,8 +30,6 @@ const PatientDiagnosis = ({ entry }: { entry: Entry }) => {
     !entry.diagnosisCodes) {
     return null;
   }
-
-  console.log("PatientDiagnosis.ts --> Object.values(diagnosis):", Object.values(diagnosis));
   
   //* iterates each code in array, and then shows code and gets corresponding name (codeObj.name) for the code from diagnoses list 
   return (

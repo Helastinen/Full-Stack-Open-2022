@@ -92,16 +92,16 @@ export const reducer = (state: State, action: Action): State => {
         };
 
       case "ADD_ENTRY":
-        console.log("reducer.ts -> ADD_ENTRY -> action.payload:", action.payload);
+        //console.log("reducer.ts -> ADD_ENTRY -> action.payload:", action.payload);
 
         const patientBeforeNewEntry = state.patients[action.payload.patientId];
-        console.log("reducer.ts -> ADD_ENTRY -> patientBeforeNewEntry{}:", patientBeforeNewEntry);
+        //console.log("reducer.ts -> ADD_ENTRY -> patientBeforeNewEntry{}:", patientBeforeNewEntry);
         //const PatientAfterNewEntry: Patient = patientBeforeNewEntry.entries.concat(action.payload.entry);
         const patientAfterNewEntry = {
           ...patientBeforeNewEntry,
           entries: [...patientBeforeNewEntry.entries, action.payload.entry]
         };
-        console.log("reducer.ts -> ADD_ENTRY -> patientAfterNewEntry{}:", patientAfterNewEntry);
+        //console.log("reducer.ts -> ADD_ENTRY -> patientAfterNewEntry{}:", patientAfterNewEntry);
 
         return { 
           ...state,

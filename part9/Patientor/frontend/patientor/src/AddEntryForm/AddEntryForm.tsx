@@ -19,7 +19,7 @@ interface Props {
 
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   const [{ diagnosis }] = useStateValue();
-  
+
   return (
     <Formik
       initialValues={{
@@ -50,12 +50,6 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
               name="specialist"
               component={TextField}
             />
-            {/*<Field
-              label="DiagnosisCodes"
-              placeholder="DiagnosisCodes"
-              name="diagnosisCodes"
-              component={TextField}
-            />*/}
             <DiagnosisSelection 
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}

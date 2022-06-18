@@ -15,7 +15,7 @@ import { TableBody } from "@material-ui/core";
 
 const PatientListPage = () => {
   const [{ patients }, dispatch] = useStateValue();
-  console.log("PatientListPage.ts -> patients: { patients }", patients);
+  //console.log("PatientListPage.ts -> patients: { patients }", patients);
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
@@ -33,7 +33,8 @@ const PatientListPage = () => {
         `${apiBaseUrl}/patients`,
         values
       );
-      console.log("PatientListPage.ts -> submitNewPatient() -> newPatient:", newPatient);
+      //console.log("PatientListPage.ts -> submitNewPatient() -> newPatient:", newPatient);
+
       dispatch(addPatient(newPatient));
       closeModal();
     } catch (e: unknown) {

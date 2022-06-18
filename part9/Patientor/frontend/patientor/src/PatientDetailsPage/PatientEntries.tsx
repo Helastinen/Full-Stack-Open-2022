@@ -1,5 +1,6 @@
 import { Table, TableCell, TableRow, TableBody } from "@material-ui/core";
 import { MonitorHeart, LocalHospital, Sick } from '@mui/icons-material/';
+import { v1 as uuid } from "uuid";
 
 import { Patient, Entry, Discharge, SickLeave, HealthCheckRating } from "../types";
 import PatientDiagnosis from "./PatientDiagnosis";
@@ -17,26 +18,22 @@ const HealthCheck = ({ healthCheckRating }: { healthCheckRating: HealthCheckRati
 const Hospital = ({ discharge }: { discharge: Discharge }) => {
   
   return (
-    <>
+    <p>
       Discharge:<br/>
-      <ul>
-        <li key={discharge.date}>{discharge.date}</li>
-        <li key={discharge.criteria}>{discharge.criteria}</li>
-      </ul>
-    </>
+      {" "}date: {discharge.date}<br/>
+      {" "}criteria: {discharge.criteria}<br/>
+    </p>
   );
 };
 
 const OccupationalHealthcareSickLeave = ({ sickLeave }: { sickLeave: SickLeave }) => {
 
   return (
-    <>
+    <p>
       Sickleave:<br/>
-      <ul>
-        <li key={sickLeave.startDate}>{sickLeave.startDate}</li>
-        <li key={sickLeave.endDate}>{sickLeave.endDate}</li>
-      </ul>
-    </>
+      {" "}start date: {sickLeave.startDate}<br/>
+      {" "}end date: {sickLeave.endDate}<br/>
+    </p>
   );
 };
 
@@ -47,20 +44,22 @@ const PatientEntries = ({ patient }: { patient: Patient }) => {
     );
   };
   
+  const listId = uuid();
+
   const entryType = (entry: Entry) => {
     switch (entry.type) {
       case "HealthCheck":
-        return <HealthCheck healthCheckRating={entry.healthCheckRating}/>;
+        return <HealthCheck key={listId} healthCheckRating={entry.healthCheckRating}/>;
 
       case "Hospital":
-        return <Hospital key={entry.discharge.criteria} discharge={entry.discharge} />;
+        return <Hospital key={listId} discharge={entry.discharge} />;
 
       case "OccupationalHealthcare":
         if (entry.sickLeave) {  
           return (
             <>
               Employer: {entry.employerName}<br/>
-              <OccupationalHealthcareSickLeave key={entry.sickLeave.startDate} sickLeave={entry.sickLeave} />
+              <OccupationalHealthcareSickLeave key={listId} sickLeave={entry.sickLeave} />
             </>
           );
         }

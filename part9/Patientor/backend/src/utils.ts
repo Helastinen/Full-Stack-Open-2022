@@ -99,7 +99,7 @@ const toNewPatient = ({
     occupation: parseOccupation(occupation),
     entries: parseEntries(entries)
   };
-  console.log("utis.ts -> toNewPatient() -> newPatient{}:", newPatient);
+  //console.log("utis.ts -> toNewPatient() -> newPatient{}:", newPatient);
   
   return newPatient;
 };

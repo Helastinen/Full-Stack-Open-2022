@@ -38,7 +38,7 @@ const addEntry = (entry: NewEntry, patientId: string): Entry => {
     id: id,
     ...entry
   };
-  console.log("patientsService.ts --> addEntry() --> newEntry{}:", newEntry);
+  //console.log("patientsService.ts --> addEntry() --> newEntry{}:", newEntry);
  
   patients
     .find(p => p.id === patientId)?.entries.push(newEntry);

@@ -19,8 +19,6 @@ const PatientDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   
   useEffect(() => {
-    console.log('PatientDetailsPage.ts: useEffect triggered');
-
     const getPatient = async (id: string) => {
       try {
         const {data: patient } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
@@ -50,7 +48,6 @@ const PatientDetailsPage = () => {
     !patients[id as string].entries) {
     return null;
   }
-  console.log("PatientDetailsPage.ts --> patient:", patient);
   
   //* Add Entry
   const openModal = (): void => setModalOpen(true);
@@ -65,7 +62,7 @@ const PatientDetailsPage = () => {
         `${apiBaseUrl}/patients/${id as string}/entries`,
         values
         );
-      console.log("PatientDetailsPage.ts -> submitNewEntry() -> newEntry:", newEntry);
+      //console.log("PatientDetailsPage.ts -> submitNewEntry() -> newEntry:", newEntry);
       dispatch(addEntry(newEntry, id as string));
       closeModal();
     } catch (e: unknown) {
