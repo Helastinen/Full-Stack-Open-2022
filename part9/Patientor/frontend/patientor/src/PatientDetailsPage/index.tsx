@@ -6,7 +6,7 @@ import { Button, Typography } from "@material-ui/core";
 
 import { Patient, Entry } from "../types";
 import { apiBaseUrl } from "../constants";
-import { useStateValue, getPatientDetails } from "../state";
+import { useStateValue, getPatientDetails, addEntry } from "../state";
 
 import BasicPatientData from "./BasicPatientData";
 import PatientEntries from "./PatientEntries";
@@ -66,7 +66,7 @@ const PatientDetailsPage = () => {
         values
         );
       console.log("PatientDetailsPage.ts -> submitNewEntry() -> newEntry:", newEntry);
-      //dispatch(addEntry(newEntry));
+      dispatch(addEntry(newEntry, id as string));
       closeModal();
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

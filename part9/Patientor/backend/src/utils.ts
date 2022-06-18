@@ -112,7 +112,6 @@ const parseId = (id: unknown): string => {
 };
 
 const isType = (type: unknown): type is Type => {
-  console.log("utils.ts --> isType() --> typeof type: ", typeof type);
   return typeof type === "string" || type instanceof String;
 };
 
@@ -235,7 +234,7 @@ const toNewEntry = ({
         type: "HealthCheck",
         healthCheckRating: parseHealthCheckRating(healthCheckRating),
       };
-      console.log("utis.ts -> toNewEntry() -> newHealthCheckEntry{}:", newHealthCheckEntry);
+      //console.log("utis.ts -> toNewEntry() -> newHealthCheckEntry{}:", newHealthCheckEntry);
       return newHealthCheckEntry;
 
     case "Hospital":
@@ -244,7 +243,7 @@ const toNewEntry = ({
         type: "Hospital",
         discharge: parseDischarge(discharge),
       };
-      console.log("utis.ts -> toNewEntry() -> newHospitalEntry{}:", newHospitalEntry);
+      //console.log("utis.ts -> toNewEntry() -> newHospitalEntry{}:", newHospitalEntry);
       return newHospitalEntry;
 
     case "OccupationalHealthcare":
@@ -254,7 +253,7 @@ const toNewEntry = ({
         employerName: parseEmployerName(employerName),
         ...sickLeave ? {sickLeave: parseSickLeave(sickLeave)} : null,
       };
-      console.log("utis.ts -> toNewEntry() -> newOccupationalHealthcareEntry{}:",newOccupationalHealthcareEntry);
+      //console.log("utis.ts -> toNewEntry() -> newOccupationalHealthcareEntry{}:",newOccupationalHealthcareEntry);
       return newOccupationalHealthcareEntry;
 
     default:
